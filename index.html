@@ -4,6 +4,8 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>A/K South East Asia Trip Nov '26</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&display=swap');
+
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Share+Tech+Mono&display=swap');
 :root{--bg:#090b0d;--panel:#121518;--panel2:#191d22;--line:#282d33;--text:#f5f7f8;--muted:#9aa2aa;--green:#18b985;--orange:#ff7359;--blue:#62a8ff;--yellow:#f5c451}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit;color:inherit}a{color:#8bc1ff;text-decoration:none}
@@ -31,9 +33,9 @@
 .tl.cont .time{display:none}
 
 /* PROGRAM + ACCOMMODATION desktop layout */
-.programAccommodation{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:14px;align-items:stretch}
+.programAccommodation{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr)!important;gap:14px;align-items:stretch}.programAccommodation>.section{min-width:0}
 .programAccommodation>.section{margin:0}
-@media(max-width:760px){.programAccommodation{grid-template-columns:1fr;gap:10px}}
+@media(max-width:760px){.programAccommodation{grid-template-columns:1fr!important;gap:10px}}
 
 /* Digital-style numerals */
 .digital,.clock strong,#count,.tl .time,.tl b.time{
@@ -42,6 +44,26 @@
   letter-spacing:.06em;
 }
 .tl .time,.tl b.time{font-weight:700}
+
+.clock strong,#count,.timeRow .time{
+  font-family:'Orbitron',monospace!important;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.08em;
+}
+
+.timeline{margin-top:6px}
+.timeRow{display:grid;grid-template-columns:58px 14px 1fr;gap:7px;align-items:start;margin:4px 0!important;min-height:0!important;line-height:1.25}
+.timeRow .time{font-size:13px}
+.timeRow .rail{position:relative;align-self:stretch;min-height:24px}
+.timeRow .rail:after{content:'';position:absolute;left:6px;top:12px;bottom:-9px;width:1px;background:#343a41}
+.timeRow:last-child .rail:after{display:none}
+.timeRow .dot{position:absolute;left:3px;top:6px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+.timeRow.cont{grid-template-columns:58px 14px 1fr;margin-top:-1px!important}
+.timeRow.cont .time{visibility:hidden}
+.timeRow.cont .dot{display:none}
+.timeRow.cont .rail:after{top:-5px}
+.eventTitle{line-height:1.25}
+.eventNote{margin-top:1px;line-height:1.2}
 </style>
 </head><body>
 <div class="authOverlay" id="authOverlay"><div class="authBox"><h2>🔐 A/K SOUTH EAST ASIA TRIP NOV '26</h2><p>Authorized travelers only</p><input id="loginEmail" type="email" autocomplete="username" placeholder="Email"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password"><button id="loginBtn">Log in</button><div class="authError" id="authError"></div></div></div>
@@ -52,7 +74,7 @@
 <div class="layout"><aside class="side"><div class="clocks"><div class="clock"><small>TOKYO</small><strong id="tokyo">--:--</strong></div><div class="clock"><small>BANGKOK</small><strong id="bkk">--:--</strong></div></div><div class="month"><h3>NOVEMBER 2026</h3><div class="week"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div><div class="days"><span class="day">1</span><span class="day">2</span><span class="day">3</span><span class="day">4</span><span class="day">5</span><span class="day">6</span><span class="day">7</span><span class="day">8</span><span class="day">9</span><span class="day">10</span><span class="day">11</span><span class="day">12</span><span class="day">13</span><span class="day">14</span><span class="day">15</span><span class="day">16</span><span class="day">17</span><span class="day">18</span><span class="day">19</span><span class="day">20</span><span class="day trip">21</span><span class="day trip">22</span><span class="day trip">23</span><span class="day trip">24</span><span class="day trip">25</span><span class="day trip">26</span><span class="day trip">27</span><span class="day">28</span><span class="day">29</span><span class="day">30</span></div></div><div class="mini"><b>7 days · 4 cities · 3 countries</b><br>Thailand 🇹🇭 · Cambodia 🇰🇭 · Vietnam 🇻🇳</div></aside>
 <main><div id="summaryView"><div class="cards" id="cards"></div>
 <section class="editor"><h3>✏️ Edit selected day</h3><label>Date</label><input id="edDate" placeholder="21.11"><label>Day</label><input id="edDow" placeholder="SAT"><label>Place / title</label><input id="edCity"><label>Weather location</label><input id="edWeather" placeholder="Bangkok, Thailand"><div class="hint">都市名を入れると現在の天気を取得します。</div><label>Summary</label><input id="edSub"><label>Icon</label><input id="edIcon" placeholder="✈️">
-<h4>⏱ TIMELINE</h4><textarea id="edTimeline" placeholder="08:00 | Movy Lodge 出発 | Grabで駅へ&#10;09:30 | Ayutthaya 到着 |"></textarea><div class="hint">1行＝ 時間 | 予定 | メモ</div>
+<h4>⏱ TIMELINE</h4><textarea id="edTimeline" placeholder="08:00 | Movy Lodge 出発 | Grabで駅へ&#10;09:30 | Ayutthaya 到着 |"></textarea><div class="hint">1行＝ 時間 | 予定 | メモ　／　時間を空欄にすると「点なしの続き行」になります。例： | Mt. Omuro |</div>
 <h4>🏨 HOTEL / STAY</h4><label>Name</label><input id="edStay"><label>Hotel web</label><input id="edHotelWeb" placeholder="https://..."><label>Map</label><input id="edHotelMap" placeholder="https://..."><label>Payment</label><select id="edPayment"><option value="">—</option><option>ON-SITE</option><option>PAID</option><option>PAY LATER</option></select><label>Hotel amount</label><input id="edHotelAmount" type="number"><label>Currency</label><select id="edHotelCurrency"><option>JPY</option><option>THB</option><option>USD</option><option>KHR</option><option>VND</option></select>
 <h4>📍 PLACES</h4><textarea id="edPlaces" placeholder="Wat Pho | https://maps.google.com/..."></textarea><div class="hint">1行＝ 場所名 | URL</div>
 <h4>✈ TRANSPORT</h4><textarea id="edTransport" placeholder="Flight | HND → HKG → BKK | https://..."></textarea><div class="hint">1行＝ 種類/名前 | 内容 | URL</div>
@@ -70,7 +92,7 @@ function esc(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt
 function icon(c){if(c===0)return'☀️';if(c<=2)return'🌤️';if(c===3)return'☁️';if(c>=51&&c<=82)return'🌧️';if(c>=95)return'⛈️';return'🌡️'}async function weather(l){if(!l)return null;if(weatherCache[l])return weatherCache[l];try{let g=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(l)}&count=1&language=en&format=json`).then(r=>r.json()),p=g.results?.[0];if(!p)return null;let w=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${p.latitude}&longitude=${p.longitude}&current=temperature_2m,weather_code&timezone=auto`).then(r=>r.json());return weatherCache[l]={temp:Math.round(w.current.temperature_2m),code:w.current.weather_code}}catch{return null}}
 function money(n,c){try{return new Intl.NumberFormat('ja-JP',{style:'currency',currency:c,maximumFractionDigits:c==='VND'?0:2}).format(n)}catch{return n+' '+c}}function totals(x){let t={},add=(a,c)=>{a=Number(a);if(a)t[c||'JPY']=(t[c||'JPY']||0)+a};add(x.hotel?.amount,x.hotel?.currency);A(x.costs).forEach(c=>add(c.amount,c.currency));return t}
 function render(){let c=$('cards');c.innerHTML='';days.forEach((x,i)=>{let e=document.createElement('div');e.className='card';e.innerHTML=`<div class="datebox">${esc(x.d)}<div class="dow">${esc(x.dow)}</div></div><div><div class="title">${esc(x.city)} <span class="weatherChip" data-w="${i}">weather…</span></div><div class="sub">${esc(x.sub)}</div></div><div class="right">${esc(x.stay)} <span class="pill">${esc(x.icons||'📍')}</span></div>`;e.onclick=()=>toggleDay(i);c.appendChild(e);let d=document.createElement('div');d.id=`accordion-${i}`;d.className='accordionDetail hidden';c.appendChild(d)});days.forEach(async(x,i)=>{let w=await weather(x.weatherLocation),e=document.querySelector(`[data-w="${i}"]`);if(e)e.textContent=w?`${icon(w.code)} ${w.temp}°C`:'—'})}
-function show(i){selected=i;let x=days[i],target=document.getElementById(`accordion-${i}`),tl=A(x.timeline).map(e=>`<div class="timeRow"><div class="time">${esc(e.time||'—')}</div><div class="rail"><span class="dot"></span></div><div><div class="eventTitle">${esc(e.title)}</div><div class="eventNote">${esc(e.note)}</div></div></div>`).join(''),pl=A(x.places).map(p=>safe(p.url)?`<a class="placeLink" target="_blank" href="${esc(safe(p.url))}">📍 ${esc(p.name)} ↗</a>`:`<span class="placeLink">📍 ${esc(p.name)}</span>`).join(''),tr=A(x.transport).map(t=>`<div class="box"><h4>${esc(t.name)}</h4><p>${esc(t.detail)}</p>${safe(t.url)?`<a class="actionLink" target="_blank" href="${esc(safe(t.url))}">WEB ↗</a>`:''}</div>`).join(''),ln=A(x.links).map(l=>safe(l.url)?`<a class="actionLink" target="_blank" href="${esc(safe(l.url))}">${esc(l.name)} ↗</a>`:'').join('');
+function show(i){selected=i;let x=days[i],target=document.getElementById(`accordion-${i}`),tl=A(x.timeline).map(e=>`<div class="timeRow ${e.time?'':'cont'}"><div class="time">${e.time?esc(e.time):''}</div><div class="rail">${e.time?'<span class="dot"></span>':''}</div><div><div class="eventTitle">${esc(e.title)}</div>${e.note?`<div class="eventNote">${esc(e.note)}</div>`:''}</div></div>`).join(''),pl=A(x.places).map(p=>safe(p.url)?`<a class="placeLink" target="_blank" href="${esc(safe(p.url))}">📍 ${esc(p.name)} ↗</a>`:`<span class="placeLink">📍 ${esc(p.name)}</span>`).join(''),tr=A(x.transport).map(t=>`<div class="box"><h4>${esc(t.name)}</h4><p>${esc(t.detail)}</p>${safe(t.url)?`<a class="actionLink" target="_blank" href="${esc(safe(t.url))}">WEB ↗</a>`:''}</div>`).join(''),ln=A(x.links).map(l=>safe(l.url)?`<a class="actionLink" target="_blank" href="${esc(safe(l.url))}">${esc(l.name)} ↗</a>`:'').join('');
 let costs='';if(x.hotel?.amount)costs+=`<div class="moneyRow"><span>🏨 ${esc(x.stay)} · ${esc(x.hotel.payment)}</span><span>${money(+x.hotel.amount,x.hotel.currency||'JPY')}</span></div>`;A(x.costs).forEach(c=>costs+=`<div class="moneyRow"><span>${esc(c.name)}</span><span>${money(+c.amount||0,c.currency||'JPY')}</span></div>`);let tt=Object.entries(totals(x)).map(([c,n])=>`<div class="moneyTotal"><span>TOTAL ${c}</span><span>${money(n,c)}</span></div>`).join(''),hl=(safe(x.hotel?.web)?`<a class="actionLink" target="_blank" href="${esc(safe(x.hotel.web))}">🏨 HOTEL WEB ↗</a>`:'')+(safe(x.hotel?.map)?`<a class="actionLink" target="_blank" href="${esc(safe(x.hotel.map))}">📍 MAP ↗</a>`:'');
 target.innerHTML=`<div class="detailHead"><div><h2>${esc(x.d)} · ${esc(x.city)}</h2><div class="meta">${esc(x.sub)}</div></div><span class="weatherChip" id="dw-${i}">weather…</span></div><div class="programAccommodation">${tl?`<section class="section"><h3>PROGRAM</h3><div class="timeline">${tl}</div></section>`:'<section class="section"><h3>PROGRAM</h3><div class="box muted">No program yet</div></section>'}<section class="section"><h3>ACCOMMODATION</h3><div class="box"><h4>${esc(x.stay)}</h4>${x.hotel?.payment?`<p>${esc(x.hotel.payment)}${x.hotel.amount?' · '+money(+x.hotel.amount,x.hotel.currency||'JPY'):''}</p>`:''}${hl}</div></section></div>${pl?`<section class="section"><h3>PLACES</h3>${pl}</section>`:''}${tr?`<section class="section"><h3>TRANSPORT</h3><div class="grid">${tr}</div></section>`:''}${costs||tt?`<section class="section"><h3>BUDGET</h3><div class="box">${costs}${tt}</div></section>`:''}${ln?`<section class="section"><h3>LINKS</h3>${ln}</section>`:''}${x.notes?`<section class="section"><h3>NOTES & TIPS</h3><div class="box">${esc(x.notes).replace(/\n/g,'<br>')}</div></section>`:''}`;target.classList.remove('hidden');fill(x);weather(x.weatherLocation).then(w=>{let e=document.getElementById(`dw-${i}`);if(w&&e)e.textContent=`${icon(w.code)} ${w.temp}°C`})}
 function toggleDay(i){let target=document.getElementById(`accordion-${i}`),wasOpen=target&&!target.classList.contains('hidden');document.querySelectorAll('.accordionDetail').forEach(e=>{e.classList.add('hidden');e.innerHTML=''});if(wasOpen)return;show(i)}
