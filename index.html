@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>A/K South East Asia Trip Nov '26</title>
+<title>A/K ASIAN JOURNEY 2026</title>
 <link rel="icon" type="image/png" sizes="32x32" href="./asia_trip_icon_32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="./asia_trip_icon_180.png">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -144,6 +144,11 @@
 .notesFold summary::marker{color:inherit}
 .notesFoldBody{border-top:1px solid rgba(150,170,190,.20);padding:12px 14px;line-height:1.65;overflow-wrap:anywhere}
 .notesPlain{line-height:1.65;overflow-wrap:anywhere}
+
+/* V16: Summary collapsed cards — date + title/weather + summary + day emojis */
+#cards .card{grid-template-columns:48px minmax(0,1fr)}
+#cards .summaryDayEmojis{margin-top:8px;font-size:20px;line-height:1.45;white-space:normal;overflow-wrap:anywhere;letter-spacing:2px}
+@media(max-width:760px){#cards .card{grid-template-columns:45px minmax(0,1fr)}}
 </style>
 <!-- Khmer mobile audio fallback v2; native Khmer voices preserved -->
 <style>
@@ -227,16 +232,16 @@
 .panelItem.taskCheck span{flex:1;min-width:0;overflow-wrap:anywhere}
 </style>
 </head><body>
-<div class="authOverlay" id="authOverlay"><div class="authBox"><h2>🔐 A/K SOUTH EAST ASIA TRIP NOV '26</h2><p>Authorized travelers only</p><input id="loginEmail" type="email" autocomplete="username" placeholder="Email"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password"><button id="loginBtn">Log in</button><div class="authError" id="authError"></div></div></div>
+<div class="authOverlay" id="authOverlay"><div class="authBox"><h2>🔐 A/K ASIAN JOURNEY 2026</h2><p>Authorized travelers only</p><input id="loginEmail" type="email" autocomplete="username" placeholder="Email"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password"><button id="loginBtn">Log in</button><div class="authError" id="authError"></div></div></div>
 <div class="topstrip"><div class="route"><div class="seg"><b>HND</b>21 NOV</div><div class="seg"><b>HONG KONG</b>TRANSIT</div><div class="seg"><b>BANGKOK</b>21–23</div><div class="seg"><b>SIEM REAP</b>23–24</div><div class="seg"><b>PHNOM PENH</b>25</div><div class="seg"><b>HO CHI MINH</b>26–27</div></div></div>
-<div class="header"><div class="brand">🌏<i></i>A/K SOUTH EAST ASIA TRIP NOV '26</div><div class="count" id="count">...</div></div>
+<div class="header"><div class="brand">🌏<i></i>A/K ASIAN JOURNEY 2026</div><div class="count" id="count">...</div></div>
 <div class="tabs"><button class="tab active" data-view="home">🏠 Home</button><button class="tab" data-view="tasks">☑ Tasks</button><button class="tab" data-view="hotels">🏨 Hotels</button><button class="tab" data-view="transport">✈ Transport</button><button class="tab" data-view="weather">☀ Weather</button><button class="tab" data-view="places">📍 Places</button><button class="tab" data-view="languages">🗣️ Languages</button><button class="tab" data-view="summary">◉ Summary</button><button class="tab" data-view="expenses">💰 Expenses</button><button class="tab" data-view="checklist">✅ Checklist</button><button class="tab" data-view="foodlist">🍜 Food</button><button class="tab" data-view="memories">📸 Memories</button><button class="tab" data-view="quicklinks">🧭 Quick Links</button><button class="tab" data-view="emergency">🆘 Emergency</button><button class="tab" data-view="achievements">🏆 Achievements</button><button class="tab" data-view="couplequiz">💕 Couple Quiz</button><button class="tab" data-view="dailymood">😊 Daily Mood</button><button class="tab" data-view="postcards">💌 Postcards</button><button class="tab" data-view="timecapsule">🔐 Time Capsule</button><button class="tab" data-view="currency">💱 Currency</button><button class="tab" data-view="passport">🛂 Passport</button><button class="tab" data-view="links">🔗 Links</button></div>
 <div class="mobileNav" id="mobileNav"><button data-mobile-view="home" class="active">🏠 Home</button><button data-mobile-view="transport">✈ Transport</button><button data-mobile-view="languages">🗣️ Languages</button><button id="mobileMore" aria-expanded="false">☰ More</button></div>
 <div class="mobileMenu" id="mobileMenu"></div>
 <div class="userbar"><span class="syncDot" id="syncDot"></span><span id="syncText">Connecting…</span><span id="userEmail"></span><button id="logoutBtn">Log out</button></div>
 <div class="layout"><aside class="side"><div class="clocks"><div class="clock"><small>TOKYO</small><strong id="tokyo">--:--</strong></div><div class="clock"><small>BANGKOK</small><strong id="bkk">--:--</strong></div></div><div class="month"><h3>NOVEMBER 2026</h3><div class="week"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div><div class="days"><span class="day">1</span><span class="day">2</span><span class="day">3</span><span class="day">4</span><span class="day">5</span><span class="day">6</span><span class="day">7</span><span class="day">8</span><span class="day">9</span><span class="day">10</span><span class="day">11</span><span class="day">12</span><span class="day">13</span><span class="day">14</span><span class="day">15</span><span class="day">16</span><span class="day">17</span><span class="day">18</span><span class="day">19</span><span class="day">20</span><span class="day trip">21</span><span class="day trip">22</span><span class="day trip">23</span><span class="day trip">24</span><span class="day trip">25</span><span class="day trip">26</span><span class="day trip">27</span><span class="day">28</span><span class="day">29</span><span class="day">30</span></div></div><div class="mini"><b>7 days · 4 cities · 3 countries</b><br>Thailand 🇹🇭 · Cambodia 🇰🇭 · Vietnam 🇻🇳</div></aside>
 <main><div id="homeView" class="homeView show"><div class="panelView show"><h2>🏠 HOME</h2><h3 class="section">🌍 WORLD CLOCK</h3><div class="homeClocks" id="homeClocks"></div><div class="homeCalendar" id="homeCalendar"></div><div class="homeDayDetail" id="homeDayDetail"></div></div></div><div id="summaryView" style="display:none"><div class="cards" id="cards"></div>
-<section class="editor"><h3>✏️ Edit selected day</h3><label>Date</label><input id="edDate" placeholder="11/21"><label>Day</label><input id="edDow" placeholder="SAT"><label>Place / title</label><input id="edCity"><label>Weather location</label><input id="edWeather" placeholder="Bangkok, Thailand"><div class="hint">都市名を入れると現在の天気を取得します。</div><label>Summary</label><input id="edSub"><label>Icon</label><input id="edIcon" placeholder="✈️">
+<section class="editor"><h3>✏️ Edit selected day</h3><label>Date</label><input id="edDate" placeholder="11/21"><label>Day</label><input id="edDow" placeholder="SAT"><label>Place / title</label><input id="edCity"><label>Weather location</label><input id="edWeather" placeholder="Bangkok, Thailand"><div class="hint">都市名を入れると現在の天気を取得します。</div><label>Summary</label><input id="edSub"><label>Day emojis (multiple allowed)</label><input id="edIcon" placeholder="✈️ 🛕 🍜 🌃"><div class="hint">絵文字を複数入力できます。スペースで区切り、順番を変えると表示順も変わります。削除する場合は文字を消してください。</div>
 <h4>⏱ TIMELINE</h4><textarea id="edTimeline" placeholder="08:00 | Movy Lodge 出発 | Grabで駅へ&#10;09:30 | Ayutthaya 到着 |"></textarea><div class="hint">1行＝ 時間 | 予定 | メモ　／　時間を空欄にすると「点なしの続き行」になります。例： | Mt. Omuro |</div>
 <h4>🏨 HOTEL / STAY</h4><label>Name</label><input id="edStay"><label>Hotel web</label><input id="edHotelWeb" placeholder="https://..."><label>Map</label><input id="edHotelMap" placeholder="https://..."><label>Payment</label><select id="edPayment"><option value="">—</option><option>ON-SITE</option><option>PAID</option><option>PAY LATER</option></select><label>Hotel amount</label><input id="edHotelAmount" type="number"><label>Currency</label><select id="edHotelCurrency"><option>JPY</option><option>THB</option><option>USD</option><option>KHR</option><option>VND</option></select>
 <h4>📍 PLACES</h4><textarea id="edPlaces" placeholder="Wat Pho | https://maps.google.com/..."></textarea><div class="hint">1行＝ 場所名 | URL</div>
@@ -250,10 +255,31 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, writeBatch, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, writeBatch, runTransaction, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyB-vI_ItB-px9uxSs7oXd4CabG9gWb1shQ",authDomain:"asia-trip-2026-35bdd.firebaseapp.com",projectId:"asia-trip-2026-35bdd",storageBucket:"asia-trip-2026-35bdd.firebasestorage.app",messagingSenderId:"646312766177",appId:"1:646312766177:web:7a6438b3244246af06a5a0",measurementId:"G-B8HK8Q4F1J"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),ref=doc(db,'shared','itinerary');let days=[],selected=0,unsub=null,tasks=[],weatherCache={};let personalUnsub=null,personal={},sharedExtras={},extrasReady=false,personalReady=false;const $=id=>document.getElementById(id);
-const seed=[{d:'21.11',dow:'SAT',city:'BANGKOK',weatherLocation:'Bangkok, Thailand',sub:'HND → HKG → BKK · Arrival 11:20',icons:'✈️',stay:'Movy Lodge',timeline:[{time:'11:20',title:'Bangkok arrival',note:''}]},{d:'22.11',dow:'SUN',city:'AYUTTHAYA',weatherLocation:'Ayutthaya, Thailand',sub:'Day trip from Bangkok',icons:'🚆',stay:'Movy Lodge',timeline:[{time:'',title:'Ayutthaya day trip',note:''}]},{d:'23.11',dow:'MON',city:'SIEM REAP',weatherLocation:'Siem Reap, Cambodia',sub:'DMK 15:00 → SAI 16:00',icons:'✈️',stay:'The Community Siem Reap',timeline:[{time:'15:00',title:'DMK departure',note:''},{time:'16:00',title:'SAI arrival',note:''}]},{d:'24.11',dow:'TUE',city:'SIEM REAP',weatherLocation:'Siem Reap, Cambodia',sub:'Angkor Wat · Angkor Thom · Bayon · Ta Prohm',icons:'🏛️',stay:'Night bus 22:30',timeline:[{time:'22:30',title:'Giant Ibis → Phnom Penh',note:'Night bus'}]},{d:'25.11',dow:'WED',city:'PHNOM PENH',weatherLocation:'Phnom Penh, Cambodia',sub:'Arrive 04:30 · Killing Fields',icons:'🚌',stay:'Overnight / bus prep',timeline:[{time:'04:30',title:'Phnom Penh arrival',note:''}]},{d:'26.11',dow:'THU',city:'HO CHI MINH',weatherLocation:'Ho Chi Minh City, Vietnam',sub:'03:00 PP → 09:30 HCMC · District 1',icons:'🚌',stay:'Phan Anh Backpackers Hostel',timeline:[{time:'03:00',title:'Phnom Penh departure',note:''},{time:'09:30',title:'HCMC arrival',note:''}]},{d:'27.11',dow:'FRI',city:'HO CHI MINH → TOKYO',weatherLocation:'Ho Chi Minh City, Vietnam',sub:'Free time · SGN 17:20 → HND',icons:'✈️',stay:'On plane',timeline:[{time:'17:20',title:'SGN → HND',note:''}]}];
+const seed=[{d:'20.11',dow:'FRI',city:'HANEDA AIRPORT',weatherLocation:'Tokyo, Japan',sub:'Head to Haneda Airport · Overnight flight check-in',icons:'🧳 🚃 ✈️',stay:'',timeline:[{time:'',title:'Travel to Haneda Airport',note:'Prepare for the flight departing at 01:00 on Nov 21.'}]},{d:'21.11',dow:'SAT',city:'BANGKOK',weatherLocation:'Bangkok, Thailand',sub:'HND → HKG → BKK · Arrival 11:20',icons:'✈️',stay:'Movy Lodge',timeline:[{time:'11:20',title:'Bangkok arrival',note:''}]},{d:'22.11',dow:'SUN',city:'AYUTTHAYA',weatherLocation:'Ayutthaya, Thailand',sub:'Day trip from Bangkok',icons:'🚆',stay:'Movy Lodge',timeline:[{time:'',title:'Ayutthaya day trip',note:''}]},{d:'23.11',dow:'MON',city:'SIEM REAP',weatherLocation:'Siem Reap, Cambodia',sub:'DMK 15:00 → SAI 16:00',icons:'✈️',stay:'The Community Siem Reap',timeline:[{time:'15:00',title:'DMK departure',note:''},{time:'16:00',title:'SAI arrival',note:''}]},{d:'24.11',dow:'TUE',city:'SIEM REAP',weatherLocation:'Siem Reap, Cambodia',sub:'Angkor Wat · Angkor Thom · Bayon · Ta Prohm',icons:'🏛️',stay:'Night bus 22:30',timeline:[{time:'22:30',title:'Giant Ibis → Phnom Penh',note:'Night bus'}]},{d:'25.11',dow:'WED',city:'PHNOM PENH',weatherLocation:'Phnom Penh, Cambodia',sub:'Arrive 04:30 · Killing Fields',icons:'🚌',stay:'Overnight / bus prep',timeline:[{time:'04:30',title:'Phnom Penh arrival',note:''}]},{d:'26.11',dow:'THU',city:'HO CHI MINH',weatherLocation:'Ho Chi Minh City, Vietnam',sub:'03:00 PP → 09:30 HCMC · District 1',icons:'🚌',stay:'Phan Anh Backpackers Hostel',timeline:[{time:'03:00',title:'Phnom Penh departure',note:''},{time:'09:30',title:'HCMC arrival',note:''}]},{d:'27.11',dow:'FRI',city:'HO CHI MINH → TOKYO',weatherLocation:'Ho Chi Minh City, Vietnam',sub:'Free time · SGN 17:20 → HND',icons:'✈️',stay:'On plane',timeline:[{time:'17:20',title:'SGN → HND',note:''}]},{d:'28.11',dow:'SAT',city:'BACK IN JAPAN',weatherLocation:'Tokyo, Japan',sub:'Arrive at Haneda Airport · Head home',icons:'🛬 🇯🇵 🏠',stay:'',timeline:[{time:'',title:'Arrive at Haneda Airport',note:'Arrival time: check flight booking.'},{time:'',title:'Head home',note:''}]}];
+// V17: add the two travel-boundary days to the shared itinerary only if missing.
+// Transaction preserves every existing day and all other shared document fields.
+let v17BoundaryMigrationStarted=false;
+async function ensureV17BoundaryDays(){
+  if(v17BoundaryMigrationStarted)return;
+  v17BoundaryMigrationStarted=true;
+  try{
+    await runTransaction(db,async transaction=>{
+      const snapshot=await transaction.get(ref);
+      if(!snapshot.exists())return; // Existing first-time initialization uses the full V17 seed.
+      const stored=snapshot.data()||{};
+      const existing=A(stored.days);
+      if(!existing.length)return;
+      const hasDay=n=>existing.some(x=>displayDate(x.d)===`11/${n}`);
+      const missingStart=!hasDay(20),missingEnd=!hasDay(28);
+      if(!missingStart&&!missingEnd)return;
+      const next=[...(missingStart?[norm(seed[0])]:[]),...existing,...(missingEnd?[norm(seed[seed.length-1])]:[])];
+      transaction.update(ref,{days:next});
+    });
+  }catch(e){v17BoundaryMigrationStarted=false;console.warn('V17 boundary dates will retry on next login:',e)}
+}
 function esc(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function safe(v=''){try{let u=new URL(v);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return''}}function A(v){return Array.isArray(v)?v:[]}function norm(x){return {...x,weatherLocation:x.weatherLocation||x.city,hotel:x.hotel||{web:'',map:'',payment:'',amount:'',currency:'JPY'},timeline:A(x.timeline).length?x.timeline:A(x.detail).filter((_,i)=>i%2).map(t=>({time:'',title:t,note:''})),places:A(x.places),transport:A(x.transport),costs:A(x.costs),links:A(x.links),notes:x.notes||''}}function parse(t,k){return t.split('\n').map(x=>x.trim()).filter(Boolean).map(l=>{let p=l.split('|').map(s=>s.trim()),o={};k.forEach((z,i)=>o[z]=p[i]||'');return o})}function lines(a,k){return A(a).map(o=>k.map(z=>o[z]||'').join(' | ')).join('\n')}function sync(t,c=''){$('syncText').textContent=t;$('syncDot').className='syncDot'+(c?' '+c:'')}
 function renderGroupedNotes(raw){
  const parts=String(raw||'').replace(/\r\n?/g,'\n').split('\n');
@@ -310,7 +336,7 @@ function displayDate(d){
   return s;
 }
 function money(n,c){try{return new Intl.NumberFormat('ja-JP',{style:'currency',currency:c,maximumFractionDigits:c==='VND'?0:2}).format(n)}catch{return n+' '+c}}function totals(x){let t={},add=(a,c)=>{a=Number(a);if(a)t[c||'JPY']=(t[c||'JPY']||0)+a};add(x.hotel?.amount,x.hotel?.currency);A(x.costs).forEach(c=>add(c.amount,c.currency));return t}
-function render(){let c=$('cards');c.innerHTML='';days.forEach((x,i)=>{let e=document.createElement('div');e.className='card';e.innerHTML=`<div class="datebox">${esc(displayDate(x.d))}<div class="dow">${esc(x.dow)}</div></div><div><div class="title">${esc(x.city)} <span class="weatherChip" data-w="${i}">weather…</span></div><div class="sub">${esc(x.sub)}</div></div><div class="right">${esc(x.stay)} <span class="pill">${esc(x.icons||'📍')}</span></div>`;e.onclick=()=>toggleDay(i);c.appendChild(e);let d=document.createElement('div');d.id=`accordion-${i}`;d.className='accordionDetail hidden';c.appendChild(d)});days.forEach(async(x,i)=>{let w=await weather(x.weatherLocation),e=document.querySelector(`[data-w="${i}"]`);if(e)e.textContent=w?`${icon(w.code)} ${w.temp}°C`:'—'})}
+function render(){let c=$('cards');c.innerHTML='';days.forEach((x,i)=>{let e=document.createElement('div');e.className='card';e.innerHTML=`<div class="datebox">${esc(displayDate(x.d))}<div class="dow">${esc(x.dow)}</div></div><div><div class="title">${esc(x.city)} <span class="weatherChip" data-w="${i}">weather…</span></div><div class="sub">${esc(x.sub)}</div><div class="summaryDayEmojis">${esc(x.icons||'📍')}</div></div></div>`;e.onclick=()=>toggleDay(i);c.appendChild(e);let d=document.createElement('div');d.id=`accordion-${i}`;d.className='accordionDetail hidden';c.appendChild(d)});days.forEach(async(x,i)=>{let w=await weather(x.weatherLocation),e=document.querySelector(`[data-w="${i}"]`);if(e)e.textContent=w?`${icon(w.code)} ${w.temp}°C`:'—'})}
 function formatItineraryTime(value){return esc(value).replace(/(\d{1,2}:\d{2})\s*[~～〜–—-]\s*(\d{1,2}:\d{2})/g,'$1<span class="timeWave">～</span>$2')}
 function show(i){if(selected!==i)summaryTransportEditing=null;selected=i;let x=days[i],target=document.getElementById(`accordion-${i}`),tl=A(x.timeline).map(e=>`<div class="timeRow ${e.time?'':'cont'}"><div class="time">${e.time?formatItineraryTime(e.time):''}</div><div class="rail">${e.time?'<span class="dot"></span>':''}</div><div><div class="eventTitle">${esc(e.title)}</div>${e.note?`<div class="eventNote">${esc(e.note)}</div>`:''}</div></div>`).join(''),pl=A(x.places).map(p=>safe(p.url)?`<a class="placeLink" target="_blank" href="${esc(safe(p.url))}">📍 ${esc(p.name)} ↗</a>`:`<span class="placeLink">📍 ${esc(p.name)}</span>`).join(''),tr=A(x.transport).map(t=>`<div class="box"><h4>${esc(t.name)}</h4><p>${esc(t.detail)}</p>${safe(t.url)?`<a class="actionLink" target="_blank" href="${esc(safe(t.url))}">WEB ↗</a>`:''}</div>`).join(''),ln=A(x.links).map(l=>safe(l.url)?`<a class="actionLink" target="_blank" href="${esc(safe(l.url))}">${esc(l.name)} ↗</a>`:'').join('');
 let costs='';if(x.hotel?.amount)costs+=`<div class="moneyRow"><span>🏨 ${esc(x.stay)} · ${esc(x.hotel.payment)}</span><span>${money(+x.hotel.amount,x.hotel.currency||'JPY')}</span></div>`;A(x.costs).forEach(c=>costs+=`<div class="moneyRow"><span>${esc(c.name)}</span><span>${money(+c.amount||0,c.currency||'JPY')}</span></div>`);let tt=Object.entries(totals(x)).map(([c,n])=>`<div class="moneyTotal"><span>TOTAL ${c}</span><span>${money(n,c)}</span></div>`).join(''),hl=(safe(x.hotel?.web)?`<a class="actionLink" target="_blank" href="${esc(safe(x.hotel.web))}">🏨 HOTEL WEB ↗</a>`:'')+(safe(x.hotel?.map)?`<a class="actionLink" target="_blank" href="${esc(safe(x.hotel.map))}">📍 MAP ↗</a>`:'');
@@ -911,7 +937,7 @@ const segmentPolygons={a:'3,1 15,1 13,3 5,3',b:'16,2 18,4 18,13 16,15 15,13 15,5
 function sevenSegmentClock(value){const parts=[...value],svg=parts.map((char,i)=>{const x=i<2?i*21:i===2?42:50+(i-3)*21;if(char===':')return `<circle cx="${x+3}" cy="11" r="1.8" fill="currentColor"/><circle cx="${x+3}" cy="23" r="1.8" fill="currentColor"/>`;return `<g transform="translate(${x},0)">${[...segmentDigits[char]||''].map(k=>`<polygon points="${segmentPolygons[k]}" fill="currentColor"/>`).join('')}</g>`}).join('');return `<svg class="segmentClock" viewBox="0 0 93 33" role="img" aria-label="${value}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`}
 function updateHomeClocks(){const host=$('homeClocks');if(!host)return;const now=new Date();host.innerHTML=homeZones.map(([name,zone])=>{const time=new Intl.DateTimeFormat('en-GB',{timeZone:zone,hour:'2-digit',minute:'2-digit',hour12:false}).format(now);return `<div class="homeClock"><small>${name}</small>${sevenSegmentClock(time)}</div>`}).join('')}
 function homeDateIndex(day){return days.findIndex(x=>{const d=displayDate(x.d);return d===`11/${day}`||d===`11/${String(day).padStart(2,'0')}`})}
-function homeDefaultDay(){const now=new Date(),local=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Bangkok',month:'numeric',day:'numeric',year:'numeric'}).format(now),m=local.match(/^(\d+)\/(\d+)\/(\d+)$/);const d=m&&+m[1]===11&&+m[3]===2026?+m[2]:21;return homeDateIndex(d)>=0?d:21}
+function homeDefaultDay(){const now=new Date(),local=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Bangkok',month:'numeric',day:'numeric',year:'numeric'}).format(now),m=local.match(/^(\d+)\/(\d+)\/(\d+)$/);const d=m&&+m[1]===11&&+m[3]===2026?+m[2]:20;return homeDateIndex(d)>=0?d:20}
 function renderHomeDay(){const host=$('homeDayDetail');if(!host)return;const i=homeDateIndex(homeSelectedDay);if(i<0){host.innerHTML='';return}const x=days[i];
  const tl=A(x.timeline).map(e=>`<div class="timeRow ${e.time?'':'cont'}"><div class="time">${esc(e.time||'').replace(/~/g,'～')}</div><div class="rail">${e.time?'<span class="dot"></span>':''}</div><div><div class="eventTitle">${esc(e.title)}</div>${e.note?`<div class="eventNote">${esc(e.note)}</div>`:''}</div></div>`).join('');
  const hl=(safe(x.hotel?.web)?`<a class="actionLink" target="_blank" href="${esc(safe(x.hotel.web))}">🏨 HOTEL WEB ↗</a>`:'')+(safe(x.hotel?.map)?`<a class="actionLink" target="_blank" href="${esc(safe(x.hotel.map))}">📍 MAP ↗</a>`:'');
@@ -935,30 +961,60 @@ function tripShowLoadError(area,error){
  el.textContent=`${area}: ${msg}`;
  target.prepend(el);
 }
-$('loginBtn').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('loginEmail').value.trim(),$('loginPassword').value)}catch(e){$('authError').textContent='メールアドレスまたはパスワードを確認してください。'}};$('logoutBtn').onclick=()=>signOut(auth);onAuthStateChanged(auth,async u=>{if(unsub)unsub();if(personalUnsub)personalUnsub();stopQuizListeners();personalReady=false;extrasReady=false;if(!u){personal={};sharedExtras={};$('authOverlay').classList.remove('hidden');return}$('authOverlay').classList.add('hidden');$('userEmail').textContent=u.email||'';// V10: isolate optional listeners and UI rendering from the core Firestore sync.
-try{startQuizListeners()}catch(e){console.error('Quiz listener setup:',e)}
-try{
-  let s=await getDoc(ref);
-  if(!s.exists())await setDoc(ref,{days:seed.map(norm),tasks:[],createdAt:serverTimestamp()});
-  unsub=onSnapshot(ref,s=>{
-    try{
-      let d=s.data()||{};
-      days=A(d.days).map(norm);tasks=A(d.tasks);
-      sharedExtras={...initialSharedExtras(),...(d.extraFeatures||{})};extrasReady=true;
-      // Mark successful database delivery before optional views render.
-      sync('Synced','ok');
-      try{render()}catch(e){console.error('Summary cards render:',e)}
-      try{if(currentView==='home')renderHome()}catch(e){console.error('Home render:',e);tripShowLoadError('Home',e)}
-      try{if(extraViews.includes(currentExtra))renderExtra(currentExtra)}catch(e){console.error('Extra view render:',e);tripShowLoadError('Extra view',e)}
-      try{if(currentView==='transport')renderTransportPlus()}catch(e){console.error('Transport render:',e);tripShowLoadError('Transport',e)}
-      try{if(currentView==='summary'&&!summaryTransportEditing)renderSummaryTransport()}catch(e){console.error('Summary transport render:',e);tripShowLoadError('Summary Transport',e)}
-    }catch(e){console.error('Firestore data handling:',e);sync('Display error','err');tripShowLoadError('Firestore data',e)}
-  },e=>{console.error('Firestore listener:',e);sync('Sync failed','err');tripShowLoadError('Firestore',e)});
-  try{personalUnsub=onSnapshot(personalDoc(),s=>{
-    personal={...initialPersonal(),...(s.exists()?s.data():{})};personalReady=true;
-    if(extraViews.includes(currentExtra))try{renderExtra(currentExtra)}catch(e){console.error('Personal view render:',e);tripShowLoadError('Personal view',e)}
-  },e=>{personalReady=false;console.error('Personal data:',e);if(extraViews.includes(currentExtra))extraPanel('Personal data unavailable',`<div class="panelItem extraError">${esc(e.message)}. Check Firestore security rules for users/{uid}/trips/asia-trip-2026.</div>`)})}catch(e){console.error('Personal listener setup:',e)}
-}catch(e){console.error('Firebase startup:',e);sync('Connection error','err');tripShowLoadError('Firebase connection',e)}
+// V15: read-only, per-account last-successful snapshot for slow or interrupted connections.
+// Cache writes are best-effort; Firestore remains the source of truth.
+function tripCacheKey(kind,uid){return 'asia-trip-2026-v15:'+kind+':'+uid}
+function tripCacheRead(kind,uid){try{const v=JSON.parse(localStorage.getItem(tripCacheKey(kind,uid))||'null');return v&&v.data&&typeof v.data==='object'?v.data:null}catch(e){console.warn('Cache read:',e);return null}}
+function tripCacheWrite(kind,uid,data){try{localStorage.setItem(tripCacheKey(kind,uid),JSON.stringify({savedAt:Date.now(),data}))}catch(e){console.warn('Cache write:',e)}}
+function tripApplyShared(d){
+  days=A(d.days).map(norm);tasks=A(d.tasks);
+  sharedExtras={...initialSharedExtras(),...(d.extraFeatures||{})};extrasReady=true;
+  try{render()}catch(e){console.error('Summary cards render:',e)}
+  try{if(currentView==='home')renderHome()}catch(e){console.error('Home render:',e);tripShowLoadError('Home',e)}
+  try{if(extraViews.includes(currentExtra))renderExtra(currentExtra)}catch(e){console.error('Extra view render:',e);tripShowLoadError('Extra view',e)}
+  try{if(currentView==='transport')renderTransportPlus()}catch(e){console.error('Transport render:',e);tripShowLoadError('Transport',e)}
+  try{if(currentView==='summary'&&!summaryTransportEditing)renderSummaryTransport()}catch(e){console.error('Summary transport render:',e);tripShowLoadError('Summary Transport',e)}
+}
+function tripApplyPersonal(d){personal={...initialPersonal(),...d};personalReady=true;
+  if(extraViews.includes(currentExtra))try{renderExtra(currentExtra)}catch(e){console.error('Personal view render:',e);tripShowLoadError('Personal view',e)}
+}
+$('loginBtn').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('loginEmail').value.trim(),$('loginPassword').value)}catch(e){$('authError').textContent='メールアドレスまたはパスワードを確認してください。'}};$('logoutBtn').onclick=()=>signOut(auth);onAuthStateChanged(auth,async u=>{
+  if(unsub)unsub();if(personalUnsub)personalUnsub();stopQuizListeners();
+  unsub=null;personalUnsub=null;personalReady=false;extrasReady=false;
+  if(!u){personal={};sharedExtras={};$('authOverlay').classList.remove('hidden');return}
+  $('authOverlay').classList.add('hidden');$('userEmail').textContent=u.email||'';
+  // Show cached information immediately. Never upload cached data back to Firestore.
+  const cachedShared=tripCacheRead('shared',u.uid),cachedPersonal=tripCacheRead('personal',u.uid);
+  if(cachedShared){try{tripApplyShared(cachedShared);sync('Connecting… · saved data')}catch(e){console.error('Shared cache:',e)}}
+  if(cachedPersonal){try{tripApplyPersonal(cachedPersonal)}catch(e){console.error('Personal cache:',e)}}
+  try{startQuizListeners()}catch(e){console.error('Quiz listener setup:',e)}
+  try{
+    // Attach listeners immediately: waiting for getDoc before subscribing caused long loading stalls.
+    let firstShared=true;
+    unsub=onSnapshot(ref,s=>{
+      try{
+        if(!s.exists()){
+          if(firstShared && !cachedShared && !s.metadata.fromCache){
+            setDoc(ref,{days:seed.map(norm),tasks:[],createdAt:serverTimestamp()}).catch(e=>tripShowLoadError('Initial data',e));
+          }
+          return;
+        }
+        const d=s.data()||{};
+        tripApplyShared(d);
+        if(!s.metadata.fromCache)tripCacheWrite('shared',u.uid,d);
+        sync(s.metadata.fromCache?'Saved data · connecting…':'Synced',s.metadata.fromCache?'':'ok');
+        firstShared=false;
+      }catch(e){console.error('Firestore data handling:',e);sync('Display error','err');tripShowLoadError('Firestore data',e)}
+    },e=>{console.error('Firestore listener:',e);sync(cachedShared?'Offline · saved data':'Sync failed','err');tripShowLoadError('Firestore',e)});
+    ensureV17BoundaryDays().catch(e=>console.warn('V17 dates:',e));
+    personalUnsub=onSnapshot(personalDoc(),s=>{
+      try{
+        const d=s.exists()?s.data():{};
+        tripApplyPersonal(d);
+        if(!s.metadata.fromCache)tripCacheWrite('personal',u.uid,d);
+      }catch(e){console.error('Personal data render:',e);tripShowLoadError('Personal data',e)}
+    },e=>{console.error('Personal data:',e);if(!cachedPersonal){personalReady=false;if(extraViews.includes(currentExtra))extraPanel('Personal data unavailable',`<div class="panelItem extraError">${esc(e.message)}. Check Firestore security rules for users/{uid}/trips/asia-trip-2026.</div>`)}});
+  }catch(e){console.error('Firebase startup:',e);sync(cachedShared?'Offline · saved data':'Connection error','err');tripShowLoadError('Firebase connection',e)}
 });
 function clocks(){let n=new Date();$('tokyo').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',hour12:false}).format(n);$('bkk').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',hour:'2-digit',minute:'2-digit',hour12:false}).format(n)}clocks();setInterval(clocks,30000);updateHomeClocks();setInterval(updateHomeClocks,30000);function cd(){let s=new Date('2026-11-21T00:00:00+09:00'),e=new Date('2026-11-28T00:00:00+09:00'),n=new Date();$('count').textContent=n<s?`${Math.ceil((s-n)/86400000)} DAYS LEFT`:n<e?'TRIP IN PROGRESS':'MEMORIES ∞'}cd();setInterval(cd,3600000);
 </script></body></html>
