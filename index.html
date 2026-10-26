@@ -157,6 +157,12 @@
 .tripTransportDay[open]>summary{border-bottom:1px solid #343a41}
 .tripTransportDayInside{padding:8px 10px 10px}
 .tripTransportDayInside .tripTransportItem{margin:7px 0}
+
+/* V19.2: Transport timeline accents (read-only presentation only). */
+.tripTimelineTime { color:#4D8DFF; font-weight:700; }
+.tripTimelinePlace { color:#fff; font-weight:700; text-decoration:none; border-bottom:1px solid #4D8DFF; padding-bottom:1px; }
+.tripTimelineExtra { color:#a0a8b3; font-size:0.85em; font-weight:400; }
+.tripFare { color:#FFD966; font-weight:700; }
 </style>
 <!-- Khmer mobile audio fallback v2; native Khmer voices preserved -->
 <style>
@@ -541,7 +547,7 @@ function tripDayTransport(day,dayIndex){
  return tripTransportList().filter(t=>t._legacy?Number(t._key.split(':')[0])===dayIndex:t.date===date);
 }
 // V18: Multi-leg rail journeys. Stored on the existing shared transport record.
-const tripRailFields=[['line','Railway / line'],['service','Train type / service'],['bound','Destination (bound for)'],['from','Boarding station'],['departure','Departure time','time'],['platformFrom','Departure platform / track number'],['to','Arrival station'],['arrival','Arrival time','time'],['platformTo','Arrival platform / track number'],['seat1',"Kousuke's seat (optional)"],['seat2',"ArU's seat (optional)"],['transferNote','Transfer note after this train (e.g. same platform)']];
+const tripRailFields=[['line','Railway / line'],['service','Train type / service'],['bound','Destination (bound for)'],['from','Boarding station'],['departure','Departure time','time'],['platformFrom','Departure platform / track number'],['to','Arrival station'],['arrival','Arrival time','time'],['platformTo','Arrival platform / track number'],['fare','Fare / currency (this train, optional)'],['seat1',"Kousuke's seat (optional)"],['seat2',"ArU's seat (optional)"],['transferNote','Transfer note after this train (e.g. same platform)']];
 function tripRailLegs(t){return Array.isArray(t?.trainLegs)?t.trainLegs:[]}
 function tripRailEditorHtml(t,prefix){if(t.type!=='Train')return '';const legs=tripRailLegs(t).length?tripRailLegs(t):[{from:t.from||'',to:t.to||'',departure:t.departure||'',arrival:t.arrival||'',service:t.service||'',seat1:t.seat1||'',seat2:t.seat2||''}];return `<div class="tripRailEditor" data-rail-editor="${prefix}" style="grid-column:1/-1;width:100%;margin-top:10px"><h4 style="margin:8px 0">🚆 Train journey · ${legs.length} train${legs.length===1?'':'s'}</h4><p class="tripMuted">Add each train in travel order. Transfers are calculated automatically from arrival and departure times.</p><div data-rail-list="${prefix}">${legs.map((l,i)=>tripRailLegHtml(l,i,prefix)).join('')}</div><button type="button" class="tripAction secondary" data-rail-add="${prefix}">＋ Add train</button></div>`}
 function tripRailLegHtml(leg,i,prefix){return `<div class="panelItem" data-rail-leg="${i}" style="margin:10px 0;padding:12px"><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap"><b>🚆 Train ${i+1}</b><div style="display:flex;gap:5px"><button type="button" class="tripAction secondary" data-rail-up="${i}" ${i===0?'disabled':''} title="Move up">↑</button><button type="button" class="tripAction secondary" data-rail-down="${i}" title="Move down">↓</button><button type="button" class="tripAction danger" data-rail-remove="${i}">Remove</button></div></div><div class="tripForm" style="margin-top:8px">${tripRailFields.map(([k,label,kind])=>`<div class="tripField"><label>${esc(label)}</label><input data-rail-field="${k}" type="${kind||'text'}" value="${esc(leg[k]||'')}"></div>`).join('')}</div></div>`}
@@ -559,7 +565,7 @@ function tripNormalizeRailData(data){
  return data;
 }
 function tripRailTransfer(a,b){if(!a?.arrival||!b?.departure)return '';const parts=x=>x.split(':').map(Number);const [ah,am]=parts(a.arrival),[bh,bm]=parts(b.departure);let minutes=(bh*60+bm)-(ah*60+am);if(minutes<0)minutes+=1440;return minutes+' min'}
-function tripRailDisplay(t){const legs=tripRailLegs(t);if(t.type!=='Train'||!legs.length)return '';return `<div style="margin:12px 0;border-top:1px solid #343a41;padding-top:10px"><b>🚆 Train journey · ${legs.length} trains</b>${legs.map((l,i)=>`<div class="panelItem" style="margin:9px 0"><b>${i+1}. ${esc(l.line||'Train')}${l.service?' · '+esc(l.service):''}</b>${l.bound?`<div class="tripMuted">Bound for ${esc(l.bound)}</div>`:''}<div style="margin-top:7px">${esc(l.departure||'--:--')} · ${esc(l.from||'Boarding station')}${l.platformFrom?' · Platform '+esc(l.platformFrom):''}</div><div>↓</div><div>${esc(l.arrival||'--:--')} · ${esc(l.to||'Arrival station')}${l.platformTo?' · Platform '+esc(l.platformTo):''}${l.seat1?' · Kousuke: '+esc(l.seat1):''}${l.seat2?' · ArU: '+esc(l.seat2):''}</div>${l.transferNote?`<div class="tripMuted">${esc(l.transferNote)}</div>`:''}</div>${i<legs.length-1?`<div class="tripMuted" style="margin:6px 0 12px">🔄 Transfer${l.to?' at '+esc(l.to):''}${tripRailTransfer(l,legs[i+1])?' · '+tripRailTransfer(l,legs[i+1]):''}${l.transferNote?' · '+esc(l.transferNote):''}</div>`:''}`).join('')}</div>`}
+function tripRailDisplay(t){const legs=tripRailLegs(t);if(t.type!=='Train'||!legs.length)return '';return `<div style="margin:12px 0;border-top:1px solid #343a41;padding-top:10px"><b>🚆 Train journey · ${legs.length} train${legs.length===1?'':'s'}</b>${legs.map((l,i)=>`<div class="panelItem" style="margin:9px 0"><b>${i+1}. ${esc(l.line||'Train')}${l.service?' · '+esc(l.service):''}</b>${l.bound?`<div class="tripMuted">Bound for ${esc(l.bound)}</div>`:''}<div style="margin-top:7px">${esc(l.departure||'--:--')} · ${esc(l.from||'Boarding station')}${l.platformFrom?' · Platform '+esc(l.platformFrom):''}</div><div>↓</div><div>${esc(l.arrival||'--:--')} · ${esc(l.to||'Arrival station')}${l.platformTo?' · Platform '+esc(l.platformTo):''}${l.seat1?' · Kousuke: '+esc(l.seat1):''}${l.seat2?' · ArU: '+esc(l.seat2):''}</div>${l.transferNote?`<div class="tripMuted">${esc(l.transferNote)}</div>`:''}</div>${i<legs.length-1?`<div class="tripMuted" style="margin:6px 0 12px">🔄 Transfer${l.to?' at '+esc(l.to):''}${tripRailTransfer(l,legs[i+1])?' · '+tripRailTransfer(l,legs[i+1]):''}${l.transferNote?' · '+esc(l.transferNote):''}</div>`:''}`).join('')}</div>`}
 
 
 // V18.1: Type-specific form visibility and multi-leg local bus journeys.
@@ -583,7 +589,7 @@ const tripTypeLabels={
  'Taxi / Grab':{from:'Pickup point',to:'Drop-off point',operator:'Taxi / ride provider'}
 };
 function tripApplyTypeFields(root,prefix){const select=root.querySelector('#'+prefix+'-type');if(!select)return;const type=select.value,allowed=tripTypeVisible[type]||tripTypeVisible.Other,labels=tripTypeLabels[type]||{};for(const [key] of tripFieldDefs){const input=root.querySelector('#'+prefix+'-'+key);if(!input)continue;const field=input.closest('.tripField');if(!field)continue;field.style.display=allowed.includes(key)?'':'none';const label=field.querySelector('label');if(label)label.textContent=labels[key]||tripFieldDefs.find(f=>f[0]===key)[1]}}
-const tripBusFields=[['line','Bus route / number'],['service','Service type (optional)'],['bound','Destination (bound for)'],['from','Boarding stop'],['departure','Departure time','time'],['platformFrom','Boarding bay / stop number'],['to','Drop-off stop'],['arrival','Arrival time','time'],['platformTo','Arrival bay / stop number'],['transferNote','Transfer note (e.g. cross the street)']];
+const tripBusFields=[['line','Bus route / number'],['service','Service type (optional)'],['bound','Destination (bound for)'],['from','Boarding stop'],['departure','Departure time','time'],['platformFrom','Boarding bay / stop number'],['to','Drop-off stop'],['arrival','Arrival time','time'],['platformTo','Arrival bay / stop number'],['fare','Fare / currency (this bus, optional)'],['transferNote','Transfer note (e.g. cross the street)']];
 function tripBusLegs(t){return Array.isArray(t?.busLegs)?t.busLegs:[]}
 function tripBusLegHtml(leg,i){return `<div class="panelItem" data-bus-leg="${i}" style="margin:10px 0;padding:12px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><b>🚌 Bus ${i+1}</b><div style="display:flex;gap:5px"><button type="button" class="tripAction secondary" data-bus-up="${i}" ${i===0?'disabled':''}>↑</button><button type="button" class="tripAction secondary" data-bus-down="${i}">↓</button><button type="button" class="tripAction danger" data-bus-remove="${i}">Remove</button></div></div><div class="tripForm" style="margin-top:8px">${tripBusFields.map(([k,label,kind])=>`<div class="tripField"><label>${esc(label)}</label><input data-bus-field="${k}" type="${kind||'text'}" value="${esc(leg[k]||'')}"></div>`).join('')}</div></div>`}
 function tripBusEditorHtml(t,prefix){if(t.type!=='Bus')return '';const legs=tripBusLegs(t).length?tripBusLegs(t):[{}];return `<div data-bus-editor="${prefix}" style="grid-column:1/-1;width:100%;margin-top:10px"><h4>🚌 Bus journey · ${legs.length} bus${legs.length===1?'':'es'}</h4><p class="tripMuted">Add each bus in travel order. Transfer times are calculated automatically.</p><div data-bus-list="${prefix}">${legs.map(tripBusLegHtml).join('')}</div><button type="button" class="tripAction secondary" data-bus-add="${prefix}">＋ Add bus</button></div>`}
@@ -638,16 +644,83 @@ function tripTransportOverview(t){
  if(end)return `to ${end} by ${mode}`;
  return `by ${mode}`;
 }
-function tripTransportCompact(t){
- const title=tripTransportTitle(t),time=t.departure||'',type=t.type||'Transport';
- const details=[['From',t.from],['To',t.to],['Departure',time],['Arrival',t.arrival],['Operator',t.operator],['Service',t.service],['Terminal / platform / gate',t.terminal],['Kousuke\'s seat',t.seat1],['ArU\'s seat',t.seat2],['Booking reference',t.booking],['Price',t.price],['Notes',t.notes]];
- return `<details class="tripTransportItem tripSummaryJourney"><summary><b>${esc(title)}</b><div class="tripMuted">${esc(tripTransportOverview(t))}</div></summary><div class="inside">${details.filter(([k,v])=>v&&String(v).trim()).map(([k,v])=>`<div class="moneyRow"><span class="tripMuted">${esc(k)}</span><span style="text-align:right;overflow-wrap:anywhere">${esc(v)}</span></div>`).join('')}${tripRailDisplay(t)}${tripBusDisplay(t)}${safe(t.url)?`<a class="actionLink" target="_blank" rel="noopener noreferrer" href="${esc(safe(t.url))}">Booking / details ↗</a>`:''}</div></details>`;
+// V18.9: Single detail renderer shared by Home, Summary, and Transport.
+// Uses saved fields (including future extra scalar fields) rather than separate page-specific lists.
+function tripTransportDetails(t){
+ // V19.0: one shared, timeline-first renderer for Home, Summary and Transport.
+ // Read-only: preserve all Firebase fields, including unrecognized future scalar fields.
+ const labels={title:'Title',type:'Type',date:'Departure date',departure:'Departure time',arrivalDate:'Arrival date',arrival:'Arrival time',from:'From',to:'To',operator:'Operator',service:'Service / number',terminal:'Terminal / platform / gate',seat1:"Kousuke's seat",seat2:"ArU's seat",booking:'Booking reference',price:'Price / currency',url:'Booking / timetable URL',notes:'Notes'};
+ const text=v=>v===undefined||v===null?'':String(v).trim();
+ const show=v=>text(v)?esc(text(v)):'';
+ const link=(k,v)=>k==='url'&&safe(text(v))?`<a href="${esc(safe(text(v)))}" target="_blank" rel="noopener noreferrer">${show(v)} ↗</a>`:show(v);
+ const row=(label,value,html=false)=>text(value)?`<div class="moneyRow"><span class="tripMuted">${esc(label)}</span><span style="text-align:right;overflow-wrap:anywhere">${html?value:show(value)}</span></div>`:'';
+ const dateTime=(date,time)=>[text(date),text(time)].filter(Boolean).join(' · ');
+ const mode=t.type==='Night bus'?'Sleeper bus':(t.type||'Other');
+ const train=mode==='Train',bus=mode==='Bus',legs=train?tripRailLegs(t):bus?tripBusLegs(t):[];
+ const first=legs[0]||{},last=legs[legs.length-1]||{};
+ const departDate=t.date||'',arriveDate=t.arrivalDate||t.date||'';
+ // V19.3: show both dates only when departure and arrival calendar dates differ.
+ // The full dates remain untouched in saved data and edit fields.
+ const crossesDate=!!(departDate&&arriveDate&&departDate!==arriveDate);
+ const displayDate=crossesDate;
+ const shortTripDate=value=>{const d=text(value);const m=d.match(/^(?:\d{4})-(\d{1,2})-(\d{1,2})$/);return m?`${Number(m[1])}/${Number(m[2])}`:d;};
+ const start=legs.length?(first.departure||t.departure):t.departure;
+ const end=legs.length?(last.arrival||t.arrival):t.arrival;
+ const startPoint=legs.length?(first.from||t.from):t.from;
+ const endPoint=legs.length?(last.to||t.to):t.to;
+ const prepaid=mode==='Flight'||mode==='Sleeper bus';
+ const moneyAtStart=!prepaid&&text(t.price);
+ const arrow='<div style="margin:5px 0 5px 5px;font-size:21px;line-height:1.2">↓</div>';
+ const timelinePoint=(dt,place,extras='')=>`<div class="tripTimelinePoint" style="margin-top:9px">${dt?`<strong class="tripTimelineTime">${esc(dt)}</strong>${place?' · ':''}`:''}${place?`<strong class="tripTimelinePlace">${esc(place)}</strong>`:''}${extras?` <span class="tripTimelineExtra">· ${extras}</span>`:''}</div>`;
+ const legLabel={fare:'Fare / currency',line:train?'Railway / line':'Bus route / number',service:'Service / type',bound:'Bound for',from:'Boarding point',departure:'Departure time',platformFrom:train?'Departure platform':'Boarding bay / stop',to:'Arrival point',arrival:'Arrival time',platformTo:train?'Arrival platform':'Arrival bay / stop',seat1:"Kousuke's seat",seat2:"ArU's seat",transferNote:'Transfer note'};
+ const consumed=new Set(['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','terminal','seat1','seat2','booking','price','url','notes','trainLegs','busLegs','_key','_legacy']);
+ let out='';
+ if(legs.length){
+   out+=`<div style="margin:8px 0 12px"><b>${train?'🚆 Train':'🚌 Bus'} journey · ${legs.length} ${train?'train':'bus'}${legs.length===1?'':train?'s':'es'}${text(t.price)?' · <span class="tripFare">'+show(t.price)+'</span>':''}</b>`;
+   legs.forEach((leg,i)=>{
+     const heading=[leg.line|| (train?'Train':'Bus'),leg.service].filter(Boolean).join(' · ');
+     const depExtra=leg.platformFrom?`${train?'Platform':'Stop'} ${show(leg.platformFrom)}`:'';
+     const arrExtra=leg.platformTo?`${train?'Platform':'Stop'} ${show(leg.platformTo)}`:'';
+     out+=`<div style="margin:17px 0 12px 16px"><b>${i+1}. ${esc(heading)}${text(leg.fare)?' · <span class="tripFare">'+show(leg.fare)+'</span>':''}</b>${leg.bound?`<div class="tripMuted">Bound for ${show(leg.bound)}</div>`:''}`;
+     out+=timelinePoint(dateTime(displayDate&&i===0?shortTripDate(departDate):'',leg.departure),leg.from,depExtra);
+     out+=arrow+timelinePoint(dateTime(displayDate&&i===legs.length-1?shortTripDate(arriveDate):'',leg.arrival),leg.to,arrExtra);
+     // Keep every per-leg field that is not already represented in the timeline.
+     for(const k of ['seat1','seat2','transferNote'])out+=row(legLabel[k],leg[k]);
+     for(const [k,v] of Object.entries(leg))if(!['line','service','bound','from','departure','platformFrom','to','arrival','platformTo','fare','seat1','seat2','transferNote'].includes(k)&&typeof v!=='object')out+=row(legLabel[k]||k,v);
+     out+='</div>';
+     if(i<legs.length-1){const transfer=tripRailTransfer(leg,legs[i+1]);out+=`<div class="tripMuted" style="margin:6px 0 14px 16px">🔄 Transfer${leg.to?' at '+show(leg.to):''}${transfer?' · '+esc(transfer):''}</div>`;}
+   });
+   out+='</div>';
+ }else{
+   const icon=mode==='Flight'?'✈️':mode==='Sleeper bus'||mode==='Bus'?'🚌':mode==='Boat / Ferry'?'🚤':mode==='Taxi / Grab'?'🚕':mode==='Private car'?'🚗':'📍';
+   out+=`<div style="margin:10px 0 18px"><b>${icon} ${show(t.operator||mode)}${t.service?' · '+show(t.service):''}</b>`;
+   // Terminal/gate is operational boarding information and must be visible at departure.
+   out+=timelinePoint(dateTime(displayDate?shortTripDate(departDate):'',start),startPoint,t.terminal?`Terminal / gate: ${show(t.terminal)}`:'');
+   if(moneyAtStart)out+=`<div style="margin-top:4px">💴 <span class="tripFare">${show(t.price)}</span></div>`;
+   out+=arrow+timelinePoint(dateTime(displayDate?shortTripDate(arriveDate):'',end),endPoint);
+   out+='</div>';
+ }
+ // Details below timeline: preserve entered information, without repeating route/time fields.
+ // Rail/bus top-level service is the first leg's service; operator is shown below when entered.
+ let below='';
+ if(legs.length){below+=row('Operator',t.operator);below+=row('Service / number',t.service&&t.service!==first.service?t.service:'');below+=row('Terminal / platform / gate',t.terminal);}
+ below+=row("Kousuke's seat",t.seat1&&(!legs.length||t.seat1!==first.seat1)?t.seat1:'');
+ below+=row("ArU's seat",t.seat2&&(!legs.length||t.seat2!==first.seat2)?t.seat2:'');
+ below+=row('Booking reference',t.booking);
+ if(prepaid)below+=row('Price / currency',text(t.price)?`<span class="tripFare">${show(t.price)}</span>`:'',true);
+ below+=row('Booking / timetable URL',link('url',t.url),true);
+ below+=row('Notes',t.notes);
+ for(const [k,v] of Object.entries(t))if(!consumed.has(k)&&!k.startsWith('_')&&typeof v!=='object')below+=row(labels[k]||k.replace(/([A-Z])/g,' $1').replace(/^./,x=>x.toUpperCase()),v);
+ return out+(below?`<div style="border-top:1px solid #343a41;padding-top:10px;margin-top:12px">${below}</div>`:'');
+}
+function tripTransportCompact(t,editable=false){
+ return `<details class="tripTransportItem tripSummaryJourney"><summary><b>${esc(tripTransportTitle(t))}</b><div class="tripMuted">${esc(tripTransportOverview(t))}</div></summary><div class="inside">${tripTransportDetails(t)}${editable?`<div><button class="tripAction secondary" data-transport-edit="${esc(t._key)}" data-legacy="${t._legacy?'1':'0'}">✏️ Edit details</button></div>`:''}</div></details>`;
 }
 
 function tripFieldHtml(f,value){const [key,label,kind]=f;let v=esc(value??'');let control=kind==='select'?`<select id="tf-${key}">${tripTransportTypes.map(z=>`<option value="${esc(z)}" ${z===(value||'Flight')?'selected':''}>${esc(z)}</option>`).join('')}</select>`:kind==='textarea'?`<textarea id="tf-${key}">${v}</textarea>`:`<input id="tf-${key}" type="${kind||'text'}" value="${v}" ${key==='booking'?'autocomplete="off"':''}>`;return `<div class="tripField ${kind==='textarea'?'wide':''}"><label for="tf-${key}">${esc(label)}</label>${control}</div>`}
 function tripTransportEditor(t){return `<div class="panelItem"><b>${tripTransportEditing===null?'＋ Add transport':'✏️ Edit transport'}</b><div class="tripForm" style="margin-top:12px">${tripFieldDefs.map(f=>tripFieldHtml(f,t[f[0]])).join('')}${tripRailEditorHtml(t,'transport')}${tripBusEditorHtml(t,'transport')}</div><div class="tripFormActions"><button class="tripAction" id="tripTransportSave">Save transport</button><button class="tripAction secondary" id="tripTransportCancel">Cancel</button>${tripTransportEditing!==null?'<button class="tripAction danger" id="tripTransportDelete">Delete details / entry</button>':''}</div><p class="tripMuted">Changes are shared with both travelers. Existing Summary transport lines remain intact.</p></div>`}
 function renderTransportPlus(){if(!extrasReady){$('panelView').innerHTML='<h2>✈ TRANSPORT</h2><div class="panelItem">Syncing…</div>';return}let all=tripTransportList(),items=all.filter(t=>tripTransportFilter==='All'||t.type===tripTransportFilter);let editing=tripTransportEditing!==null?all.find(t=>t._key===tripTransportEditing.key&&t._legacy===tripTransportEditing.legacy):null;let base=editing||{type:'Flight',date:'2026-11-21'};
-let filters=['All',...tripTransportTypes];let journeyCards=items.map(t=>`<details class="tripTransportItem"><summary><b>${esc(tripTransportTitle(t))}</b><div class="tripMuted">${esc(tripTransportOverview(t))}</div></summary><div class="inside">${[['Departure',t.date+' '+(t.departure||'')],['Arrival',(t.arrivalDate||t.date||'')+' '+(t.arrival||'')],['Operator',t.operator],['Service',t.service],['Terminal / platform / gate',t.terminal],['Kousuke’s seat',(t.type==='Flight'||(t.type==='Night bus'||t.type==='Sleeper bus'))?t.seat1:''],['ArU’s seat',(t.type==='Flight'||(t.type==='Night bus'||t.type==='Sleeper bus'))?t.seat2:''],['Booking reference',t.booking],['Price',t.price],['Notes',t.notes]].filter(([k,v])=>v&&String(v).trim()).map(([k,v])=>`<div class="moneyRow"><span class="tripMuted">${esc(k)}</span><span style="text-align:right;overflow-wrap:anywhere">${esc(v)}</span></div>`).join('')}${tripRailDisplay(t)}${tripBusDisplay(t)}${safe(t.url)?`<a class="actionLink" href="${esc(safe(t.url))}" target="_blank" rel="noopener noreferrer">Booking / details ↗</a>`:''}<div><button class="tripAction secondary" data-transport-edit="${esc(t._key)}" data-legacy="${t._legacy?'1':'0'}">✏️ Edit details</button></div></div></details>`);
+let filters=['All',...tripTransportTypes];let journeyCards=items.map(t=>tripTransportCompact(t,true));
 // V18.3: date accordion wraps each journey accordion; no data model changes.
 const dateKeys=Array.from({length:9},(_,i)=>`2026-11-${String(i+20).padStart(2,'0')}`);
 const outsideDates=[...new Set(items.map(t=>t.date||'Unscheduled').filter(d=>!dateKeys.includes(d)))].sort();
