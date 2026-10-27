@@ -244,12 +244,24 @@
   margin:1px 0 0;accent-color:#18b985;appearance:auto;
 }
 .panelItem.taskCheck span{flex:1;min-width:0;overflow-wrap:anywhere}
+
+/* V19.4: Desktop navigation only. Mobile navigation remains unchanged. */
+#desktopMore,#desktopMoreMenu{display:none}
+@media(min-width:761px){
+ .tabs>.tab:nth-child(n+12):not(#desktopMore){display:none!important}
+ #desktopMore{display:inline-block}
+ #desktopMoreMenu{position:fixed;z-index:9999;background:#171c20;border:1px solid #38424a;border-radius:12px;padding:9px;box-shadow:0 12px 28px #0009;max-height:min(70vh,650px);overflow-y:auto;min-width:195px}
+ #desktopMoreMenu.open{display:grid;grid-template-columns:1fr;gap:4px}
+ #desktopMoreMenu button{background:transparent;color:#c4c9ce;border:1px solid transparent;border-radius:8px;padding:9px 12px;text-align:left;cursor:pointer;font:inherit;white-space:nowrap}
+ #desktopMoreMenu button:hover,#desktopMoreMenu button.active{background:#273039;color:#fff}
+}
 </style>
 </head><body>
 <div class="authOverlay" id="authOverlay"><div class="authBox"><h2>🔐 A/K ASIAN JOURNEY 2026</h2><p>Authorized travelers only</p><input id="loginEmail" type="email" autocomplete="username" placeholder="Email"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password"><button id="loginBtn">Log in</button><div class="authError" id="authError"></div></div></div>
 <div class="topstrip"><div class="route"><div class="seg"><b>HND</b>21 NOV</div><div class="seg"><b>HONG KONG</b>TRANSIT</div><div class="seg"><b>BANGKOK</b>21–23</div><div class="seg"><b>SIEM REAP</b>23–24</div><div class="seg"><b>PHNOM PENH</b>25</div><div class="seg"><b>HO CHI MINH</b>26–27</div></div></div>
 <div class="header"><div class="brand">🌏<i></i>A/K ASIAN JOURNEY 2026</div><div class="count" id="count">...</div></div>
-<div class="tabs"><button class="tab active" data-view="home">🏠 Home</button><button class="tab" data-view="tasks">☑ Tasks</button><button class="tab" data-view="hotels">🏨 Hotels</button><button class="tab" data-view="transport">✈ Transport</button><button class="tab" data-view="weather">☀ Weather</button><button class="tab" data-view="places">📍 Places</button><button class="tab" data-view="languages">🗣️ Languages</button><button class="tab" data-view="summary">◉ Summary</button><button class="tab" data-view="expenses">💰 Expenses</button><button class="tab" data-view="checklist">✅ Checklist</button><button class="tab" data-view="foodlist">🍜 Food</button><button class="tab" data-view="memories">📸 Memories</button><button class="tab" data-view="quicklinks">🧭 Quick Links</button><button class="tab" data-view="emergency">🆘 Emergency</button><button class="tab" data-view="achievements">🏆 Achievements</button><button class="tab" data-view="couplequiz">💕 Couple Quiz</button><button class="tab" data-view="dailymood">😊 Daily Mood</button><button class="tab" data-view="postcards">💌 Postcards</button><button class="tab" data-view="timecapsule">🔐 Time Capsule</button><button class="tab" data-view="currency">💱 Currency</button><button class="tab" data-view="passport">🛂 Passport</button><button class="tab" data-view="links">🔗 Links</button></div>
+<div class="tabs"><button class="tab active" data-view="home">🏠 Home</button><button class="tab" data-view="tasks">☑ Tasks</button><button class="tab" data-view="hotels">🏨 Hotels</button><button class="tab" data-view="transport">✈ Transport</button><button class="tab" data-view="weather">☀ Weather</button><button class="tab" data-view="places">📍 Places</button><button class="tab" data-view="languages">🗣️ Languages</button><button class="tab" data-view="summary">◉ Summary</button><button class="tab" data-view="expenses">💰 Expenses</button><button class="tab" data-view="checklist">✅ Checklist</button><button class="tab" data-view="foodlist">🍜 Food</button><button class="tab" data-view="memories">📸 Memories</button><button class="tab" data-view="quicklinks">🧭 Quick Links</button><button class="tab" data-view="emergency">🆘 Emergency</button><button class="tab" data-view="achievements">🏆 Achievements</button><button class="tab" data-view="couplequiz">💕 Couple Quiz</button><button class="tab" data-view="dailymood">😊 Daily Mood</button><button class="tab" data-view="postcards">💌 Postcards</button><button class="tab" data-view="timecapsule">🔐 Time Capsule</button><button class="tab" data-view="currency">💱 Currency</button><button class="tab" data-view="passport">🛂 Passport</button><button class="tab" data-view="links">🔗 Links</button><button type="button" class="tab" id="desktopMore" aria-expanded="false" aria-controls="desktopMoreMenu">☰ More</button></div>
+<div id="desktopMoreMenu" aria-label="More pages"></div>
 <div class="mobileNav" id="mobileNav"><button data-mobile-view="home" class="active">🏠 Home</button><button data-mobile-view="transport">✈ Transport</button><button data-mobile-view="languages">🗣️ Languages</button><button id="mobileMore" aria-expanded="false">☰ More</button></div>
 <div class="mobileMenu" id="mobileMenu"></div>
 <div class="userbar"><span class="syncDot" id="syncDot"></span><span id="syncText">Connecting…</span><span id="userEmail"></span><button id="logoutBtn">Log out</button></div>
@@ -1185,4 +1197,28 @@ $('loginBtn').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('log
   }catch(e){console.error('Firebase startup:',e);sync(cachedShared?'Offline · saved data':'Connection error','err');tripShowLoadError('Firebase connection',e)}
 });
 function clocks(){let n=new Date();$('tokyo').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',hour12:false}).format(n);$('bkk').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',hour:'2-digit',minute:'2-digit',hour12:false}).format(n)}clocks();setInterval(clocks,30000);updateHomeClocks();setInterval(updateHomeClocks,30000);function cd(){let s=new Date('2026-11-21T00:00:00+09:00'),e=new Date('2026-11-28T00:00:00+09:00'),n=new Date();$('count').textContent=n<s?`${Math.ceil((s-n)/86400000)} DAYS LEFT`:n<e?'TRIP IN PROGRESS':'MEMORIES ∞'}cd();setInterval(cd,3600000);
-</script></body></html>
+</script><script>
+/* V19.4 desktop More navigation: isolated from mobile menu and saved data. */
+(function(){
+ const more=document.getElementById('desktopMore');
+ const menu=document.getElementById('desktopMoreMenu');
+ if(!more||!menu)return;
+ const hidden=Array.from(document.querySelectorAll('.tabs .tab[data-view]')).slice(11);
+ hidden.forEach(tab=>{
+  const btn=document.createElement('button');btn.type='button';btn.textContent=tab.textContent;btn.dataset.desktopView=tab.dataset.view;
+  btn.addEventListener('click',()=>{tab.click();closeMenu();});menu.appendChild(btn);
+ });
+ function closeMenu(){menu.classList.remove('open');more.setAttribute('aria-expanded','false');}
+ more.addEventListener('click',e=>{e.stopPropagation();const open=!menu.classList.contains('open');if(!open){closeMenu();return;}
+  const rect=more.getBoundingClientRect();menu.style.top=Math.min(rect.bottom+6,window.innerHeight-100)+'px';menu.style.left=Math.max(8,Math.min(rect.left,window.innerWidth-220))+'px';
+  menu.classList.add('open');more.setAttribute('aria-expanded','true');
+ });
+ document.addEventListener('click',e=>{if(!more.contains(e.target)&&!menu.contains(e.target))closeMenu();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+ window.addEventListener('resize',closeMenu);
+ const sync=()=>{const selected=document.querySelector('.tabs .tab[data-view].active');const v=selected?.dataset.view;more.classList.toggle('active',hidden.some(t=>t.dataset.view===v));menu.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.desktopView===v));};
+ document.querySelectorAll('.tabs .tab[data-view]').forEach(tab=>tab.addEventListener('click',sync));
+ sync();
+})();
+</script>
+</body></html>
