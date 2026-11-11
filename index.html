@@ -330,6 +330,10 @@ background:#080a0b;pointer-events:none}
  #homeView .homeMapLightbox img{display:block;max-width:100%;max-height:calc(100dvh - 65px);width:auto;height:auto;object-fit:contain}
  #homeView #homeMapClose{position:absolute;right:12px;top:8px;background:#303841;color:white;border:1px solid #737d87;border-radius:50%;width:38px;height:38px;font-size:27px;cursor:pointer}
 }
+/* V21.15: flight reschedule comparison (only when original time is provided). */
+.tripFlightChanged .tripTimelineTime{color:#ffd451;font-size:1.16em;text-shadow:0 0 9px #ffd45133}
+.tripFlightOld{display:block;margin:2px 0 7px 5px;color:#858f99;font-size:11px;line-height:1.5}
+.tripFlightChanged .tripTimelinePoint{border-left:2px solid #e6bd50;padding-left:8px}
 </style>
 <!-- Khmer mobile audio fallback v2; native Khmer voices preserved -->
 <style>
@@ -554,7 +558,7 @@ function renderGuide(view){
 <div class="authOverlay" id="authOverlay"><div class="authBox"><h2>🔐 A/K ASIAN JOURNEY 2026</h2><p>Authorized travelers only</p><input id="loginEmail" type="email" autocomplete="username" placeholder="Email"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password"><button id="loginBtn">Log in</button><div class="authError" id="authError"></div></div></div>
 <div class="topstrip"><div class="route"><div class="seg"><b>HND</b>21 NOV</div><div class="seg"><b>HONG KONG</b>TRANSIT</div><div class="seg"><b>BANGKOK</b>21–23</div><div class="seg"><b>SIEM REAP</b>23–24</div><div class="seg"><b>PHNOM PENH</b>25</div><div class="seg"><b>HO CHI MINH</b>26–27</div></div></div>
 <div class="header"><div class="brand">🌏<i></i>A/K ASIAN JOURNEY 2026</div><div class="count" id="count">...</div></div>
-<div class="tabs"><button class="tab active" data-view="home">🏠 Home</button><button class="tab" data-view="transport">✈ Transport</button><button class="tab" data-view="summary">◉ Summary</button><button class="tab" data-view="hotels">🏨 Hotels</button><button class="tab" data-view="places">📍 Places</button><button class="tab" data-view="foodlist">🍜 Food</button><button class="tab" data-view="languages">🗣️ Languages</button><button class="tab" data-view="culture">🌏 Culture & Etiquette</button><button class="tab" data-view="customs">🛃 Customs & Restrictions</button><button class="tab" data-view="history">📜 History</button><button class="tab" data-view="weather">☀ Weather</button><button class="tab" data-view="expenses">💰 Expenses</button><button class="tab" data-view="emergency">🆘 Emergency</button><button class="tab" data-view="checklist">✅ Checklist</button><button class="tab" data-view="tasks">☑ Tasks</button><button class="tab" data-view="currency">💱 Currency</button><button class="tab" data-view="quicklinks">🧭 Quick Links</button><button class="tab" data-view="memories">📸 Memories</button><button class="tab" data-view="postcards">💌 Postcards</button><button class="tab" data-view="dailymood">😊 Daily Mood</button><button class="tab" data-view="achievements">🏆 Achievements</button><button class="tab" data-view="couplequiz">💕 Couple Quiz</button><button class="tab" data-view="timecapsule">🔐 Time Capsule</button><button class="tab" data-view="passport">🛂 Passport</button><button class="tab" data-view="links">🔗 Links</button><button type="button" class="tab" id="desktopMore" aria-expanded="false" aria-controls="desktopMoreMenu">☰ More</button></div>
+<div class="tabs"><button class="tab active" data-view="home">🏠 Home</button><button class="tab" data-view="transport">✈ Transport</button><button class="tab" data-view="summary">◉ Summary</button><button class="tab" data-view="documents">📁 Documents</button><button class="tab" data-view="hotels">🏨 Hotels</button><button class="tab" data-view="places">📍 Places</button><button class="tab" data-view="foodlist">🍜 Food</button><button class="tab" data-view="languages">🗣️ Languages</button><button class="tab" data-view="culture">🌏 Culture & Etiquette</button><button class="tab" data-view="customs">🛃 Customs & Restrictions</button><button class="tab" data-view="history">📜 History</button><button class="tab" data-view="weather">☀ Weather</button><button class="tab" data-view="expenses">💰 Expenses</button><button class="tab" data-view="emergency">🆘 Emergency</button><button class="tab" data-view="checklist">✅ Checklist</button><button class="tab" data-view="tasks">☑ Tasks</button><button class="tab" data-view="currency">💱 Currency</button><button class="tab" data-view="quicklinks">🧭 Quick Links</button><button class="tab" data-view="memories">📸 Memories</button><button class="tab" data-view="postcards">💌 Postcards</button><button class="tab" data-view="dailymood">😊 Daily Mood</button><button class="tab" data-view="achievements">🏆 Achievements</button><button class="tab" data-view="couplequiz">💕 Couple Quiz</button><button class="tab" data-view="timecapsule">🔐 Time Capsule</button><button class="tab" data-view="passport">🛂 Passport</button><button class="tab" data-view="links">🔗 Links</button><button type="button" class="tab" id="desktopMore" aria-expanded="false" aria-controls="desktopMoreMenu">☰ More</button></div>
 <div id="desktopMoreMenu" aria-label="More pages"></div>
 <div class="mobileNav" id="mobileNav"><button data-mobile-view="home" class="active">🏠 Home</button><button data-mobile-view="transport">✈ Transport</button><button data-mobile-view="summary">📋 Summary</button><button id="mobileMore" aria-expanded="false">☰ More</button></div>
 <div class="mobileMenu" id="mobileMenu"></div>
@@ -1002,7 +1006,7 @@ function renderPhraseResults(){const k=activeLanguage,c=activeCategory,l=languag
 
 // Structured transport records coexist with the original Summary transport lines.
 const tripTransportTypes=['Flight','Train','Sleeper bus','Bus','Boat / Ferry','Private car','Taxi / Grab','Other'];
-const tripFieldDefs=[['title','Title — English (existing)'],['titleJa','タイトル — 日本語'],['type','Type','select'],['date','Date','date'],['departure','Departure time','time'],['arrivalDate','Arrival date (for overnight journeys)','date'],['arrival','Arrival time','time'],['from','From / boarding point — English'],['fromJa','出発地 — 日本語'],['to','To / drop-off point — English'],['toJa','到着地 — 日本語'],['operator','Airline / operator — English'],['operatorJa','航空会社・運行会社 — 日本語'],['service','Flight / train / bus number'],['terminal','Terminal / platform / gate'],['seat1','Kousuke’s seat'],['seat2','ArU’s seat'],['booking','Booking reference'],['price','Price / currency'],['url','Booking / timetable URL','url'],['notes','Notes — English (existing)','textarea'],['notesJa','メモ — 日本語','textarea']];
+const tripFieldDefs=[['title','Title — English (existing)'],['titleJa','タイトル — 日本語'],['type','Type','select'],['date','Date','date'],['departure','Departure time','time'],['originalDeparture','Original departure time (before change) — Flight only','time'],['arrivalDate','Arrival date (for overnight journeys)','date'],['arrival','Arrival time','time'],['originalArrival','Original arrival time (before change) — Flight only','time'],['from','From / boarding point — English'],['fromJa','出発地 — 日本語'],['to','To / drop-off point — English'],['toJa','到着地 — 日本語'],['operator','Airline / operator — English'],['operatorJa','航空会社・運行会社 — 日本語'],['service','Flight / train / bus number'],['terminal','Terminal / platform / gate'],['seat1','Kousuke’s seat'],['seat2','ArU’s seat'],['booking','Booking reference'],['price','Price / currency'],['url','Booking / timetable URL','url'],['mapUrl','Boarding point Map URL','url'],['bookingUrl','Flight booking / status URL','url'],['notes','Notes — English (existing)','textarea'],['notesJa','メモ — 日本語','textarea']];
 let tripTransportFilter='All',tripTransportEditing=null,tripFoodCountry='Thailand',tripFoodEditing=null;
 function tripDateFromDay(x){let m=displayDate(x.d).match(/^(\d{1,2})\/(\d{1,2})$/);return m?`2026-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`:''}
 function tripDateLabel(v){if(!v)return'';let m=String(v).match(/^2026-(\d\d)-(\d\d)$/);return m?`${Number(m[1])}/${Number(m[2])}`:v}
@@ -1016,7 +1020,7 @@ function tripDayTransport(day,dayIndex){
  return tripTransportList().filter(t=>t._legacy?Number(t._key.split(':')[0])===dayIndex:t.date===date);
 }
 // V18: Multi-leg rail journeys. Stored on the existing shared transport record.
-const tripRailFields=[['line','Railway / line'],['service','Train type / service'],['bound','Destination (bound for)'],['from','Boarding station'],['departure','Departure time','time'],['platformFrom','Departure platform / track number'],['to','Arrival station'],['arrival','Arrival time','time'],['platformTo','Arrival platform / track number'],['fare','Fare / currency (this train, optional)'],['seat1',"Kousuke's seat (optional)"],['seat2',"ArU's seat (optional)"],['transferNote','Transfer note after this train (e.g. same platform)']];
+const tripRailFields=[['line','Railway / line'],['service','Train type / service'],['bound','Destination (bound for)'],['from','Boarding station'],['departure','Departure time','time'],['originalDeparture','Original departure time (before change) — Flight only','time'],['platformFrom','Departure platform / track number'],['to','Arrival station'],['arrival','Arrival time','time'],['platformTo','Arrival platform / track number'],['fare','Fare / currency (this train, optional)'],['seat1',"Kousuke's seat (optional)"],['seat2',"ArU's seat (optional)"],['transferNote','Transfer note after this train (e.g. same platform)']];
 const tripRailFieldsJaLabels={line:'路線名',service:'列車・バス種別',bound:'行き先',from:'乗車場所',to:'降車場所',platformFrom:'乗り場',platformTo:'降り場',fare:'料金',transferNote:'乗り換えメモ'};
 for(const [key,label] of Object.entries(tripRailFieldsJaLabels)){const i=tripRailFields.findIndex(f=>f[0]===key);if(i>=0)tripRailFields.splice(i+1,0,[key+'Ja',label+' — 日本語']);}
 function tripRailLegs(t){return Array.isArray(t?.trainLegs)?t.trainLegs:[]}
@@ -1044,10 +1048,10 @@ function tripRailDisplay(t){const legs=tripRailLegs(t);if(t.type!=='Train'||!leg
 const tripMoreJa=[['service','便名・路線名'],['terminal','ターミナル・乗り場'],['booking','予約番号の説明'],['price','料金の説明']];
 for(const [key,label] of tripMoreJa){const i=tripFieldDefs.findIndex(f=>f[0]===key);if(i>=0)tripFieldDefs.splice(i+1,0,[key+'Ja',label+' — 日本語']);}
 const tripTypeVisible={
- 'Flight':['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','terminal','seat1','seat2','booking','price','url','notes'],
+ 'Flight':['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','terminal','seat1','seat2','booking','price','url','bookingUrl','notes'],
  'Train':['title','type','date','arrivalDate','booking','price','url','notes'],
  'Bus':['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','price','url','notes'],
- 'Sleeper bus':['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','terminal','seat1','seat2','booking','price','url','notes'],
+ 'Sleeper bus':['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','terminal','seat1','seat2','booking','price','url','mapUrl','notes'],
  'Boat / Ferry':['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','terminal','seat1','seat2','booking','price','url','notes'],
  'Private car':['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','price','url','notes'],
  'Taxi / Grab':['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','price','url','notes'],
@@ -1063,7 +1067,7 @@ const tripTypeLabels={
  'Taxi / Grab':{from:'Pickup point',to:'Drop-off point',operator:'Taxi / ride provider'}
 };
 function tripApplyTypeFields(root,prefix){const select=root.querySelector('#'+prefix+'-type');if(!select)return;const type=select.value,allowed=tripTypeVisible[type]||tripTypeVisible.Other,labels=tripTypeLabels[type]||{};for(const [key] of tripFieldDefs){const input=root.querySelector('#'+prefix+'-'+key);if(!input)continue;const field=input.closest('.tripField');if(!field)continue;field.style.display=(allowed.includes(key)||(key.endsWith('Ja')&&allowed.includes(key.slice(0,-2))))?'':'none';const label=field.querySelector('label');if(label)label.textContent=labels[key]||tripFieldDefs.find(f=>f[0]===key)[1]}}
-const tripBusFields=[['line','Bus route / number'],['service','Service type (optional)'],['bound','Destination (bound for)'],['from','Boarding stop'],['departure','Departure time','time'],['platformFrom','Boarding bay / stop number'],['to','Drop-off stop'],['arrival','Arrival time','time'],['platformTo','Arrival bay / stop number'],['fare','Fare / currency (this bus, optional)'],['transferNote','Transfer note (e.g. cross the street)']];
+const tripBusFields=[['line','Bus route / number'],['service','Service type (optional)'],['bound','Destination (bound for)'],['from','Boarding stop'],['departure','Departure time','time'],['originalDeparture','Original departure time (before change) — Flight only','time'],['platformFrom','Boarding bay / stop number'],['to','Drop-off stop'],['arrival','Arrival time','time'],['platformTo','Arrival bay / stop number'],['fare','Fare / currency (this bus, optional)'],['transferNote','Transfer note (e.g. cross the street)']];
 const tripBusFieldsJaLabels={line:'路線名',service:'列車・バス種別',bound:'行き先',from:'乗車場所',to:'降車場所',platformFrom:'乗り場',platformTo:'降り場',fare:'料金',transferNote:'乗り換えメモ'};
 for(const [key,label] of Object.entries(tripBusFieldsJaLabels)){const i=tripBusFields.findIndex(f=>f[0]===key);if(i>=0)tripBusFields.splice(i+1,0,[key+'Ja',label+' — 日本語']);}
 function tripBusLegs(t){return Array.isArray(t?.busLegs)?t.busLegs:[]}
@@ -1076,7 +1080,7 @@ function tripBindModeEditor(root,prefix){const type=root.querySelector('#'+prefi
 
 // Summary uses the same shared transport records as the Transport page.
 let summaryTransportEditing=null;
-function summaryTransportField(f,value){const [key,label,kind]=f;const v=esc(value??'');const id='st-'+key;const control=kind==='select'?`<select id="${id}">${tripTransportTypes.map(z=>`<option value="${esc(z)}" ${z===(value||'Flight')?'selected':''}>${esc(z)}</option>`).join('')}</select>`:kind==='textarea'?`<textarea id="${id}">${v}</textarea>`:`<input id="${id}" type="${kind||'text'}" value="${v}">`;return `<div class="tripField ${kind==='textarea'?'wide':''}"><label for="${id}">${esc(label)}</label>${control}</div>`}
+function summaryTransportField(f,value){const [key,label,kind]=f;const v=esc(value??'');const id='st-'+key;const control=kind==='select'?`<select id="${id}">${tripTransportTypes.map(z=>`<option value="${esc(z)}" ${z===(value||'Flight')?'selected':''}>${esc(z)}</option>`).join('')}</select>`:kind==='textarea'?`<textarea id="${id}">${v}</textarea>`:`<input id="${id}" type="${kind||'text'}" value="${v}">`;return `<div class="tripField ${kind==='textarea'?'wide':''}" ${['originalDeparture','originalArrival'].includes(key)?'data-flight-original="1"':''}><label for="${id}">${esc(label)}</label>${control}</div>`}
 function renderSummaryTransport(){
  const root=$('summaryTransportStructured');if(!root||!days[selected])return;
  const date=tripDateFromDay(days[selected]);
@@ -1090,11 +1094,11 @@ function renderSummaryTransport(){
  root.querySelector('#st-add').onclick=()=>{summaryTransportEditing={key:'NEW',legacy:false};renderSummaryTransport()};
  root.querySelectorAll('[data-st-edit]').forEach(b=>b.onclick=()=>{summaryTransportEditing={key:b.dataset.stEdit,legacy:b.dataset.stLegacy==='1'};renderSummaryTransport()});
  if(!active)return;
- tripRailBind(root,'summary');tripBindModeEditor(root,'st');root.querySelector('#st-cancel').onclick=()=>{summaryTransportEditing=null;renderSummaryTransport()};
+ tripRailBind(root,'summary');tripBindModeEditor(root,'st');tripFlightOriginalToggle(root,'st');root.querySelector('#st-cancel').onclick=()=>{summaryTransportEditing=null;renderSummaryTransport()};
  root.querySelector('#st-save').onclick=async()=>{
    const data=Object.fromEntries(tripFieldDefs.map(([k])=>[k,root.querySelector('#st-'+k).value.trim()]));data.trainLegs=data.type==='Train'?tripRailCollect(root):tripRailLegs(entry);data.busLegs=data.type==='Bus'?tripBusCollect(root.querySelector('[data-bus-editor="summary"]')):tripBusLegs(entry);tripNormalizeRailData(data);
    if(!data.date||!data.from)return alert('Date and From are required.');
-   if(data.url&&!safe(data.url))return alert('Enter a valid https:// URL.');
+   if(['url','mapUrl','bookingUrl'].some(k=>data[k]&&!safe(data[k])))return alert('Enter a valid https:// URL.');
    if(active.legacy){sharedExtras.transportDetails=sharedExtras.transportDetails||{};sharedExtras.transportDetails[active.key]=data}
    else if(active.key==='NEW'){sharedExtras.transportEntries=A(sharedExtras.transportEntries);sharedExtras.transportEntries.push(data)}
    else{sharedExtras.transportEntries=A(sharedExtras.transportEntries);sharedExtras.transportEntries[Number(active.key)]=data}
@@ -1111,6 +1115,13 @@ function tripTransportTitle(t){return String(tripText(t.title,t.titleJa)||'').tr
 function tripUiJa(){return tripDisplayLanguage==='ja'}
 function tripUiMode(mode){if(!tripUiJa())return mode;return ({'Train':'電車','Bus':'バス','Sleeper bus':'夜行バス','Flight':'飛行機','Boat / Ferry':'船・フェリー','Taxi / Grab':'タクシー・Grab','Private car':'車','Transport':'交通手段','Other':'その他'})[mode]||mode}
 function tripUiPlatform(v,train){const value=String(v??'').trim();if(!tripUiJa())return `${train?'Platform':'Stop'} ${value}`;if(train){const n=value.match(/^(?:platform\s*)?(\d+)(?:番線)?$/i);return n?`${n[1]}番線`:`乗り場 ${value}`}return `乗り場 ${value}`}
+function tripFlightOriginalToggle(root,prefix){
+ const select=root.querySelector('#'+prefix+'-type');if(!select)return;
+ const update=()=>root.querySelectorAll('[data-flight-original]').forEach(el=>{el.style.display=select.value==='Flight'?'':'none'});
+ select.addEventListener('change',update);update();
+}
+function tripFlightChanged(t){return t.type==='Flight'&&!!(t.originalDeparture||t.originalArrival)}
+function tripFlightOldTime(t,which){const v=which==='departure'?t.originalDeparture:t.originalArrival;return v?`<span class="tripFlightOld">${tripUiJa()?'変更前':'Originally'} ${esc(v)}</span>`:''}
 function tripTransportOverview(t){
  const train=t.type==='Train'&&Array.isArray(t.trainLegs)?t.trainLegs:[];
  const bus=t.type==='Bus'&&Array.isArray(t.busLegs)?t.busLegs:[];
@@ -1118,6 +1129,7 @@ function tripTransportOverview(t){
  const start=(legs.length?legs[0].departure:t.departure)||t.departure||'';
  const end=(legs.length?legs[legs.length-1].arrival:t.arrival)||t.arrival||'';
  const mode=t.type==='Night bus'?'Sleeper bus':(t.type||'Transport');
+ if(tripFlightChanged(t)){const newTime=[start,end].filter(Boolean).join(' → ');return `${tripUiJa()?'変更後':'UPDATED'} ${newTime} · ${tripUiJa()?'飛行機':'Flight'}`;}
  if(tripUiJa()){
   const m=tripUiMode(mode);
   if(start&&end)return `${start}〜${end}・${m}`;
@@ -1161,7 +1173,7 @@ function tripTransportDetails(t){
  const arrow='<div style="margin:5px 0 5px 5px;font-size:21px;line-height:1.2">↓</div>';
  const timelinePoint=(dt,place,extras='')=>`<div class="tripTimelinePoint" style="margin-top:9px">${dt?`<strong class="tripTimelineTime">${esc(dt)}</strong>${place?' · ':''}`:''}${place?`<strong class="tripTimelinePlace">${esc(place)}</strong>`:''}${extras?` <span class="tripTimelineExtra">· ${extras}</span>`:''}</div>`;
  const legLabel={fare:'Fare / currency',line:train?'Railway / line':'Bus route / number',service:'Service / type',bound:'Bound for',from:'Boarding point',departure:'Departure time',platformFrom:train?'Departure platform':'Boarding bay / stop',to:'Arrival point',arrival:'Arrival time',platformTo:train?'Arrival platform':'Arrival bay / stop',seat1:"Kousuke's seat",seat2:"ArU's seat",transferNote:'Transfer note'};
- const consumed=new Set(['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','terminal','seat1','seat2','booking','price','url','notes','trainLegs','busLegs','_key','_legacy']);
+ const consumed=new Set(['title','type','date','departure','arrivalDate','arrival','from','to','operator','service','terminal','seat1','seat2','booking','price','url','mapUrl','bookingUrl','originalDeparture','originalArrival','notes','trainLegs','busLegs','_key','_legacy']);
  let out='';
  if(legs.length){
    out+=`<div style="margin:8px 0 12px"><b>${tripUiJa()?(train?'🚆 電車移動':'🚌 バス移動'):(train?'🚆 Train':'🚌 Bus')+' journey'} · ${legs.length} ${tripUiJa()?(train?'路線':'便'):(train?'train':'bus')+(legs.length===1?'':train?'s':'es')}${text(t.price)?' · <span class="tripFare">'+show(t.price)+'</span>':''}</b>`;
@@ -1181,9 +1193,10 @@ function tripTransportDetails(t){
    out+='</div>';
  }else{
    const icon=mode==='Flight'?'✈️':mode==='Sleeper bus'||mode==='Bus'?'🚌':mode==='Boat / Ferry'?'🚤':mode==='Taxi / Grab'?'🚕':mode==='Private car'?'🚗':'📍';
-   out+=`<div style="margin:10px 0 18px"><b>${icon} ${show(t.operator||mode)}${t.service?' · '+show(t.service):''}</b>`;
+   out+=`<div class="${tripFlightChanged(t)?'tripFlightChanged':''}" style="margin:10px 0 18px"><b>${icon} ${show(t.operator||mode)}${t.service?' · '+show(t.service):''}</b>`;
    // Terminal/gate is operational boarding information and must be visible at departure.
    out+=timelinePoint(dateTime(displayDate?shortTripDate(departDate):'',start),startPoint,t.terminal?`Terminal / gate: ${show(t.terminal)}`:'');
+   if(mode==='Flight'&&tripFlightChanged(t)&&t.originalDeparture)out+=tripFlightOldTime(t,'departure');
    if(mode==='Sleeper bus'){
      const pick=(keys)=>keys.map(k=>t[k]).find(v=>text(v))||'';
      const boardAddress=pick(['boardingAddress','boardingPointAddress','departureAddress','pickupAddress','fromAddress','originAddress','boardingLocationAddress']);
@@ -1191,6 +1204,7 @@ function tripTransportDetails(t){
    }
    if(moneyAtStart)out+=`<div style="margin-top:4px">💴 <span class="tripFare">${show(t.price)}</span></div>`;
    out+=arrow+timelinePoint(dateTime(displayDate?shortTripDate(arriveDate):'',end),endPoint);
+   if(mode==='Flight'&&tripFlightChanged(t)&&t.originalArrival)out+=tripFlightOldTime(t,'arrival');
    if(mode==='Sleeper bus'){
      const pick=(keys)=>keys.map(k=>t[k]).find(v=>text(v))||'';
      const dropAddress=pick(['dropoffAddress','dropOffAddress','dropoffPointAddress','arrivalAddress','destinationAddress','toAddress','dropOffLocationAddress']);
@@ -1207,6 +1221,8 @@ function tripTransportDetails(t){
  below+=row('Booking reference',t.booking);
  if(prepaid)below+=row('Price / currency',text(t.price)?`<span class="tripFare">${show(t.price)}</span>`:'',true);
  below+=row('Booking / timetable URL',link('url',t.url),true);
+ if(mode==='Sleeper bus'&&safe(text(t.mapUrl)))below+=row(tripUiJa()?'乗り場の地図':'Boarding point map',`<a class="actionLink" href="${esc(safe(text(t.mapUrl)))}" target="_blank" rel="noopener noreferrer">📍 ${tripUiJa()?'地図を開く':'Open boarding map'} ↗</a>`,true);
+ if(mode==='Flight'&&safe(text(t.bookingUrl)))below+=row(tripUiJa()?'予約・運航状況':'Booking / flight status',`<a class="actionLink" href="${esc(safe(text(t.bookingUrl)))}" target="_blank" rel="noopener noreferrer">✈️ ${tripUiJa()?'予約ページを開く':'Open booking page'} ↗</a>`,true);
  below+=row('Notes',t.notes);
  for(const [k,v] of Object.entries(t))if(!consumed.has(k)&&!k.startsWith('_')&&!k.endsWith('Ja')&&typeof v!=='object'&&!(mode==='Sleeper bus'&&['boardingAddress','boardingPointAddress','departureAddress','pickupAddress','fromAddress','originAddress','boardingLocationAddress','dropoffAddress','dropOffAddress','dropoffPointAddress','arrivalAddress','destinationAddress','toAddress','dropOffLocationAddress'].includes(k)))below+=row(labels[k]||k.replace(/([A-Z])/g,' $1').replace(/^./,x=>x.toUpperCase()),v);
  return out+(below?`<div style="border-top:1px solid #343a41;padding-top:10px;margin-top:12px">${below}</div>`:'');
@@ -1215,7 +1231,7 @@ function tripTransportCompact(t,editable=false){
  return `<details class="tripTransportItem tripSummaryJourney"><summary><b>${esc(tripTransportTitle(t))}</b><div class="tripMuted">${esc(tripTransportOverview(t))}</div></summary><div class="inside">${tripTransportDetails(t)}${editable?`<div><button class="tripAction secondary" data-transport-edit="${esc(t._key)}" data-legacy="${t._legacy?'1':'0'}">✏️ Edit details</button></div>`:''}</div></details>`;
 }
 
-function tripFieldHtml(f,value){const [key,label,kind]=f;let v=esc(value??'');let control=kind==='select'?`<select id="tf-${key}">${tripTransportTypes.map(z=>`<option value="${esc(z)}" ${z===(value||'Flight')?'selected':''}>${esc(z)}</option>`).join('')}</select>`:kind==='textarea'?`<textarea id="tf-${key}">${v}</textarea>`:`<input id="tf-${key}" type="${kind||'text'}" value="${v}" ${key==='booking'?'autocomplete="off"':''}>`;return `<div class="tripField ${kind==='textarea'?'wide':''}"><label for="tf-${key}">${esc(label)}</label>${control}</div>`}
+function tripFieldHtml(f,value){const [key,label,kind]=f;let v=esc(value??'');let control=kind==='select'?`<select id="tf-${key}">${tripTransportTypes.map(z=>`<option value="${esc(z)}" ${z===(value||'Flight')?'selected':''}>${esc(z)}</option>`).join('')}</select>`:kind==='textarea'?`<textarea id="tf-${key}">${v}</textarea>`:`<input id="tf-${key}" type="${kind||'text'}" value="${v}" ${key==='booking'?'autocomplete="off"':''}>`;return `<div class="tripField ${kind==='textarea'?'wide':''}" ${['originalDeparture','originalArrival'].includes(key)?'data-flight-original="1"':''}><label for="tf-${key}">${esc(label)}</label>${control}</div>`}
 function tripTransportEditor(t){return `<div class="panelItem"><b>${tripTransportEditing===null?'＋ Add transport':'✏️ Edit transport'}</b><div class="tripForm" style="margin-top:12px">${tripFieldDefs.map(f=>tripFieldHtml(f,t[f[0]])).join('')}${tripRailEditorHtml(t,'transport')}${tripBusEditorHtml(t,'transport')}</div><div class="tripFormActions"><button class="tripAction" id="tripTransportSaveJa">日本語だけ保存（英語は変更しない）</button><button class="tripAction" id="tripTransportSave">Save transport</button><button class="tripAction secondary" id="tripTransportCancel">Cancel</button>${tripTransportEditing!==null?'<button class="tripAction danger" id="tripTransportDelete">Delete details / entry</button>':''}</div><p class="tripMuted">Changes are shared with both travelers. Existing Summary transport lines remain intact.</p></div>`}
 function renderTransportPlus(){if(!extrasReady){$('panelView').innerHTML='<h2>✈ TRANSPORT</h2><div class="panelItem">Syncing…</div>';return}let all=tripTransportList(),items=all.filter(t=>tripTransportFilter==='All'||t.type===tripTransportFilter);let editing=tripTransportEditing!==null?all.find(t=>t._key===tripTransportEditing.key&&t._legacy===tripTransportEditing.legacy):null;let base=editing||{type:'Flight',date:'2026-11-21'};
 let filters=['All',...tripTransportTypes];let journeyCards=items.map(t=>tripTransportCompact(t,true));
@@ -1230,7 +1246,7 @@ const cards=groupedDates.map(date=>{
 }).join('');
 $('panelView').innerHTML=`<h2>✈ TRANSPORT</h2><p class="tripMuted">Choose a date, then tap a journey to see its details. Journeys are sorted by departure time.</p><div class="tripTabs">${filters.map(f=>`<button data-transport-filter="${esc(f)}" class="${f===tripTransportFilter?'active':''}">${esc(f)}</button>`).join('')}</div><div class="tripFormActions"><button id="tripTransportAdd" class="tripAction">＋ Add transport</button></div>${tripTransportEditing!==null?tripTransportEditor(base):''}<div class="tripHeading">JOURNEYS (${items.length})</div>${cards||'<div class="panelItem">No journeys in this category.</div>'}<div class="tripHeading">🗺️ TRANSIT MAPS & ROUTE PLANNER</div><div class="panelItem"><b>🇹🇭 Thailand — Bangkok</b><div><a class="actionLink" target="_blank" rel="noopener noreferrer" href="https://www.bts.co.th/eng/routemap.html">BTS route map ↗</a><a class="actionLink" target="_blank" rel="noopener noreferrer" href="https://www.mrta.co.th/en/">MRT / MRTA ↗</a><a class="actionLink" target="_blank" rel="noopener noreferrer" href="https://www.railway.co.th/">SRT trains ↗</a></div></div><div class="panelItem"><b>🇰🇭 Cambodia — Siem Reap / Phnom Penh</b><div><a class="actionLink" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=Siem+Reap+Cambodia">Siem Reap map ↗</a><a class="actionLink" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=Phnom+Penh+Cambodia">Phnom Penh map ↗</a></div><p class="tripMuted">City maps and bus pickup points are more useful than urban rail maps here.</p></div><div class="panelItem"><b>🇻🇳 Vietnam — Ho Chi Minh City</b><div><a class="actionLink" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=Ho+Chi+Minh+City+Metro+Line+1">Metro Line 1 map ↗</a><a class="actionLink" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=District+1+Ho+Chi+Minh+City">District 1 map ↗</a></div></div><div class="panelItem"><b>🔎 Find a route</b><p class="tripMuted">Enter a start, destination and local departure time. Opens Google Maps transit directions; availability varies by city.</p><div class="tripRouteForm"><div><label>From</label><input id="tripRouteFrom" placeholder="Phaya Thai Station"></div><div><label>To</label><input id="tripRouteTo" placeholder="Wat Arun"></div><div><label>Departure (local)</label><input id="tripRouteWhen" type="datetime-local" value="2026-11-21T09:00"></div><button id="tripRouteGo" class="tripAction">Search ↗</button></div></div>`;
 document.querySelectorAll('[data-transport-filter]').forEach(b=>b.onclick=()=>{tripTransportFilter=b.dataset.transportFilter;tripTransportEditing=null;renderTransportPlus()});document.querySelectorAll('[data-transport-edit]').forEach(b=>b.onclick=()=>{tripTransportEditing={key:b.dataset.transportEdit,legacy:b.dataset.legacy==='1'};renderTransportPlus();$('tf-type')?.scrollIntoView({block:'center',behavior:'smooth'})});$('tripTransportAdd').onclick=()=>{tripTransportEditing={key:'NEW',legacy:false};renderTransportPlus()};$('tripRouteGo').onclick=()=>{let from=$('tripRouteFrom').value.trim(),to=$('tripRouteTo').value.trim();if(!from||!to)return alert('Enter both locations.');let date=$('tripRouteWhen').value;let url='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(from)+'&destination='+encodeURIComponent(to)+'&travelmode=transit';if(date){let stamp=Math.floor(new Date(date).getTime()/1000);if(Number.isFinite(stamp))url+='&departure_time='+stamp}window.open(url,'_blank','noopener,noreferrer')};
-if(tripTransportEditing!==null){tripRailBind(document,'transport');tripBindModeEditor(document,'tf');$('tripTransportCancel').onclick=()=>{tripTransportEditing=null;renderTransportPlus()};$('tripTransportSaveJa').onclick=async()=>{
+if(tripTransportEditing!==null){tripRailBind(document,'transport');tripBindModeEditor(document,'tf');tripFlightOriginalToggle(document,'tf');$('tripTransportCancel').onclick=()=>{tripTransportEditing=null;renderTransportPlus()};$('tripTransportSaveJa').onclick=async()=>{
   if(!tripTransportEditing||tripTransportEditing.key==='NEW')return alert('既存の交通情報を選択してください。');
   const editing={...tripTransportEditing};
   const expected=tripTransportList().find(t=>t._key===editing.key&&t._legacy===editing.legacy);
@@ -1250,7 +1266,7 @@ if(tripTransportEditing!==null){tripRailBind(document,'transport');tripBindModeE
     });
     extraMessage('日本語だけ保存しました ✓');
   }catch(e){console.error(e);alert('日本語を保存できませんでした。\n'+e.message)}
-};$('tripTransportSave').onclick=async()=>{const data=Object.fromEntries(tripFieldDefs.map(([k])=>[k,$('tf-'+k).value.trim()]));data.trainLegs=data.type==='Train'?tripRailCollect(document.querySelector('[data-rail-editor="transport"]')||document.createElement('div')):tripRailLegs(base);data.busLegs=data.type==='Bus'?tripBusCollect(document.querySelector('[data-bus-editor="transport"]')):tripBusLegs(base);tripNormalizeRailData(data);if(!data.date||!data.from)return alert('Date and From are required.');if(data.url&&!safe(data.url))return alert('Enter a valid https:// URL.');if(tripTransportEditing.legacy){sharedExtras.transportDetails=sharedExtras.transportDetails||{};sharedExtras.transportDetails[tripTransportEditing.key]=data}else if(tripTransportEditing.key==='NEW'){sharedExtras.transportEntries=A(sharedExtras.transportEntries);sharedExtras.transportEntries.push(data)}else{sharedExtras.transportEntries[Number(tripTransportEditing.key)]=data}const ok=await saveSharedExtras();if(ok){tripTransportEditing=null;renderTransportPlus()}};if($('tripTransportDelete'))$('tripTransportDelete').onclick=async()=>{if(!confirm('Delete this entry or its added details? Original Summary lines will not be deleted.'))return;if(tripTransportEditing.legacy)delete sharedExtras.transportDetails[tripTransportEditing.key];else sharedExtras.transportEntries.splice(Number(tripTransportEditing.key),1);await saveSharedExtras();tripTransportEditing=null;renderTransportPlus()}}
+};$('tripTransportSave').onclick=async()=>{const data=Object.fromEntries(tripFieldDefs.map(([k])=>[k,$('tf-'+k).value.trim()]));data.trainLegs=data.type==='Train'?tripRailCollect(document.querySelector('[data-rail-editor="transport"]')||document.createElement('div')):tripRailLegs(base);data.busLegs=data.type==='Bus'?tripBusCollect(document.querySelector('[data-bus-editor="transport"]')):tripBusLegs(base);tripNormalizeRailData(data);if(!data.date||!data.from)return alert('Date and From are required.');if(['url','mapUrl','bookingUrl'].some(k=>data[k]&&!safe(data[k])))return alert('Enter a valid https:// URL.');if(tripTransportEditing.legacy){sharedExtras.transportDetails=sharedExtras.transportDetails||{};sharedExtras.transportDetails[tripTransportEditing.key]=data}else if(tripTransportEditing.key==='NEW'){sharedExtras.transportEntries=A(sharedExtras.transportEntries);sharedExtras.transportEntries.push(data)}else{sharedExtras.transportEntries[Number(tripTransportEditing.key)]=data}const ok=await saveSharedExtras();if(ok){tripTransportEditing=null;renderTransportPlus()}};if($('tripTransportDelete'))$('tripTransportDelete').onclick=async()=>{if(!confirm('Delete this entry or its added details? Original Summary lines will not be deleted.'))return;if(tripTransportEditing.legacy)delete sharedExtras.transportDetails[tripTransportEditing.key];else sharedExtras.transportEntries.splice(Number(tripTransportEditing.key),1);await saveSharedExtras();tripTransportEditing=null;renderTransportPlus()}}
 }
 
 function panel(v){$('summaryView').style.display='none';$('panelView').classList.add('show');if(v==='culture'||v==='customs'||v==='history'){if(v==='history')tripHistoryOpen=-1;renderGuide(v);return}if(v==='languages'){languageHome();return}if(v==='transport'){renderTransportPlus();return}if(['expenses','checklist','foodlist','memories','quicklinks','emergency','achievements','couplequiz','dailymood','postcards','timecapsule','currency','passport'].includes(v)){renderExtra(v);return}let title='',body='';if(v==='hotels'){title='🏨 HOTELS';body=days.filter(x=>x.stay).map(x=>hotelDetails(x)).join('')}if(v==='transport'){title='✈ TRANSPORT';body=days.flatMap(x=>A(x.transport).map(t=>`<div class="panelItem"><b>${esc(displayDate(x.d))} · ${esc(t.name)}</b><div>${esc(t.detail)}</div></div>`)).join('')}if(v==='places'){renderPlacesPanel();return}if(v==='links'){title='🔗 LINKS';body=days.flatMap(x=>A(x.links).map(l=>`<div class="panelItem"><b>${esc(displayDate(x.d))} · ${esc(tripText(x.city,x.cityJa))}</b><div><a class="actionLink" target="_blank" href="${esc(safe(l.url))}">${esc(l.name)} ↗</a></div></div>`)).join('')}if(v==='weather'){title='☀ WEATHER';body=days.map((x,i)=>`<div class="panelItem"><b>${esc(displayDate(x.d))} · ${esc(tripText(x.city,x.cityJa))}</b><div class="weatherChip" data-pw="${i}">Loading…</div></div>`).join('');setTimeout(()=>days.forEach(async(x,i)=>{let w=await weather(x.weatherLocation),e=document.querySelector(`[data-pw="${i}"]`);if(e)e.textContent=w?`${icon(w.code)} ${w.temp}°C · ${x.weatherLocation}`:'—'}),0)}if(v==='tasks'){title='☑ TASKS';body=`<div class="panelItem"><div style="display:flex;gap:7px"><input id="newTask" placeholder="e-Visa, online check-in..." style="flex:1;background:#0d1013;border:1px solid #343a41;border-radius:8px;padding:9px"><button class="smallBtn" id="addTask">Add</button></div></div>`+tasks.map((t,i)=>`<div class="panelItem taskCheck"><input type="checkbox" data-ti="${i}" ${t.done?'checked':''}><span>${esc(t.text)}</span></div>`).join('');setTimeout(()=>{$('addTask').onclick=async()=>{let z=$('newTask').value.trim();if(z){tasks.push({text:z,done:false});await save();panel('tasks')}};document.querySelectorAll('[data-ti]').forEach(e=>e.onchange=async()=>{tasks[+e.dataset.ti].done=e.checked;await save();panel('tasks')})},0)}$('panelView').innerHTML=`<h2>${title}</h2><div class="panelList">${body||'<div class="panelItem">まだ登録されていません。</div>'}</div>`}
@@ -1693,7 +1709,7 @@ function renderHomeDay(){const host=$('homeDayDetail');if(!host)return;const i=h
  host.innerHTML=`<div class="detailHead"><div><h2>${esc(displayDate(x.d))} · ${esc(tripText(x.city,x.cityJa))}</h2><div class="meta">${esc(tripText(x.sub,x.subJa))}</div></div></div><div class="programAccommodation"><section class="section"><h3>PROGRAM</h3><div class="timeline">${tl||'<div class="box">No program yet</div>'}</div></section><section class="section"><h3>ACCOMMODATION</h3>${hotelDetails(x,true)}</section></div>${pl?`<section class="section"><h3>PLACES</h3>${pl}</section>`:''}${tr?`<section class="section"><h3>TRANSPORT</h3><div class="grid">${tr}</div></section>`:''}${costs||tt?`<section class="section"><h3>BUDGET</h3><div class="box">${costs}${tt}</div></section>`:''}${ln?`<section class="section"><h3>LINKS</h3>${ln}</section>`:''}${tripText(x.notes,x.notesJa)?`<section class="section"><h3>NOTES & TIPS</h3><div class="box">${renderGroupedNotes(tripText(x.notes,x.notesJa))}</div></section>`:''}`;
 }
 function renderHome(){if(homeSelectedDay===null)homeSelectedDay=homeDefaultDay();updateHomeClocks();const calendar=$('homeCalendar');calendar.innerHTML=`<div class="month"><h3>📅 NOVEMBER 2026</h3><div class="week">${['S','M','T','W','T','F','S'].map(x=>`<span>${x}</span>`).join('')}</div><div class="days">${Array.from({length:30},(_,j)=>{const day=j+1,i=homeDateIndex(day),isTrip=i>=0;return `<button class="day ${isTrip?'trip':''} ${homeSelectedDay===day?'homeSelected':''}" data-home-day="${day}" ${isTrip?'':'disabled'}>${day}</button>`}).join('')}</div></div>`;calendar.querySelectorAll('[data-home-day]').forEach(b=>b.onclick=()=>{const d=+b.dataset.homeDay;homeSelectedDay=homeSelectedDay===d?0:d;renderHome()});renderHomeDay()}
-function setView(v){currentView=v;tripLanguageButtons();document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===v));document.querySelectorAll('[data-mobile-view]').forEach(x=>x.classList.toggle('active',x.dataset.mobileView===v));$('homeView').classList.toggle('show',v==='home');if(v==='home'){$('summaryView').style.display='none';$('panelView').classList.remove('show');renderHome()}else if(v==='summary'){$('summaryView').style.display='block';$('panelView').classList.remove('show')}else {try{panel(v)}catch(e){console.error('View '+v,e);tripShowLoadError(v,e)}}$('mobileMenu').classList.remove('open');$('mobileMore').setAttribute('aria-expanded','false');$('mobileMore').classList.toggle('active',!['home','transport','summary'].includes(v))}
+function setView(v){currentView=v;if(v==='documents')setTimeout(()=>window.tripDocumentsRender?.(),0);tripLanguageButtons();document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===v));document.querySelectorAll('[data-mobile-view]').forEach(x=>x.classList.toggle('active',x.dataset.mobileView===v));$('homeView').classList.toggle('show',v==='home');if(v==='home'){$('summaryView').style.display='none';$('panelView').classList.remove('show');renderHome()}else if(v==='summary'){$('summaryView').style.display='block';$('panelView').classList.remove('show')}else {try{if(v==='documents'){$('summaryView').style.display='none';$('panelView').classList.add('show');extraPanel('📁 DOCUMENTS','<div id="tripDocumentsRoot" class="panelItem">Loading secure documents…</div>')}else panel(v)}catch(e){console.error('View '+v,e);tripShowLoadError(v,e)}}$('mobileMenu').classList.remove('open');$('mobileMore').setAttribute('aria-expanded','false');$('mobileMore').classList.toggle('active',!['home','transport','summary'].includes(v))}
 const moreMenu=$('mobileMenu');document.querySelectorAll('.tabs .tab[data-view]').forEach(b=>{if(['home','transport','summary'].includes(b.dataset.view))return;const c=document.createElement('button');c.textContent=b.textContent;c.dataset.moreView=b.dataset.view;c.onclick=()=>setView(c.dataset.moreView);moreMenu.appendChild(c)});
 document.querySelectorAll('[data-mobile-view]').forEach(b=>b.onclick=()=>setView(b.dataset.mobileView));$('mobileMore').onclick=()=>{const open=$('mobileMenu').classList.toggle('open');$('mobileMore').setAttribute('aria-expanded',String(open));$('mobileMore').classList.toggle('active',open||!['home','transport','summary'].includes(currentView));document.querySelectorAll('[data-mobile-view]').forEach(b=>b.classList.toggle('active',!open&&b.dataset.mobileView===currentView))};
 document.querySelectorAll('.tab[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
@@ -1723,19 +1739,20 @@ function tripApplyShared(d){
 function tripApplyPersonal(d){personal={...initialPersonal(),...d};personalReady=true;
   if(extraViews.includes(currentExtra))try{renderExtra(currentExtra)}catch(e){console.error('Personal view render:',e);tripShowLoadError('Personal view',e)}
 }
-$('loginBtn').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('loginEmail').value.trim(),$('loginPassword').value)}catch(e){$('authError').textContent='メールアドレスまたはパスワードを確認してください。'}};$('logoutBtn').onclick=()=>signOut(auth);onAuthStateChanged(auth,async u=>{
+$('loginBtn').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('loginEmail').value.trim(),$('loginPassword').value)}catch(e){$('authError').textContent='メールアドレスまたはパスワードを確認してください。'}};$('logoutBtn').onclick=()=>{if(window.tripDocumentsLock)window.tripDocumentsLock();$('authOverlay').classList.remove('hidden');return signOut(auth)};onAuthStateChanged(auth,async u=>{
   if(unsub)unsub();if(personalUnsub)personalUnsub();stopQuizListeners();
   unsub=null;personalUnsub=null;personalReady=false;extrasReady=false;
   if(!u){personal={};sharedExtras={};$('authOverlay').classList.remove('hidden');return}
   $('authOverlay').classList.add('hidden');$('userEmail').textContent=u.email||'';
   // Show cached information immediately. Never upload cached data back to Firestore.
   const cachedShared=tripCacheRead('shared',u.uid),cachedPersonal=tripCacheRead('personal',u.uid);
-  if(cachedShared){try{tripApplyShared(cachedShared);sync('Connecting… · saved data')}catch(e){console.error('Shared cache:',e)}}
+  if(cachedShared){try{tripApplyShared(cachedShared);sync('Saved data · connecting…')}catch(e){console.error('Shared cache:',e)}}
   if(cachedPersonal){try{tripApplyPersonal(cachedPersonal)}catch(e){console.error('Personal cache:',e)}}
   try{startQuizListeners()}catch(e){console.error('Quiz listener setup:',e)}
   try{
     // Attach listeners immediately: waiting for getDoc before subscribing caused long loading stalls.
     let firstShared=true;
+    const connectionNotice=setTimeout(()=>{if(auth.currentUser?.uid===u.uid && firstShared)sync(cachedShared?'Saved data · waiting for network':'Connecting… · waiting for network')},8000);
     unsub=onSnapshot(ref,s=>{
       try{
         if(!s.exists()){
@@ -1745,10 +1762,14 @@ $('loginBtn').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('log
           return;
         }
         const d=s.data()||{};
-        tripApplyShared(d);
+        // Reuse already displayed cached content when the snapshot has the same data.
+        // This avoids a second full-page redraw during initial connection; never writes data.
+        let sameAsDisplayed=false;
+        if(cachedShared && firstShared){try{sameAsDisplayed=JSON.stringify(d)===JSON.stringify(cachedShared)}catch(_){}}
+        if(!sameAsDisplayed)tripApplyShared(d);
         if(!s.metadata.fromCache)tripCacheWrite('shared',u.uid,d);
         sync(s.metadata.fromCache?'Saved data · connecting…':'Synced',s.metadata.fromCache?'':'ok');
-        firstShared=false;
+        if(!s.metadata.fromCache){firstShared=false;clearTimeout(connectionNotice);}
       }catch(e){console.error('Firestore data handling:',e);sync('Display error','err');tripShowLoadError('Firestore data',e)}
     },e=>{console.error('Firestore listener:',e);sync(cachedShared?'Offline · saved data':'Sync failed','err');tripShowLoadError('Firestore',e)});
     ensureV17BoundaryDays().catch(e=>console.warn('V17 dates:',e));
@@ -1806,4 +1827,103 @@ document.getElementById('summaryView').addEventListener('toggle',function(ev){
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)closeMap();});
 })();
 </script>
-</body></html>
+<style>
+#tripDocumentsRoot{display:grid;gap:12px}#tripDocumentsRoot input,#tripDocumentsRoot select{width:100%;background:#0d1115;border:1px solid #3b4650;border-radius:8px;padding:10px;color:#fff}#tripDocumentsRoot label{display:block;color:#aeb8c1;font-size:12px;margin:8px 0 3px}#tripDocumentsRoot .docGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#tripDocumentsRoot .docRow{border:1px solid #35414c;border-radius:10px;padding:12px;background:#161d22}#tripDocumentsRoot button{background:#194539;border:1px solid #39765f;color:white;border-radius:8px;padding:9px 12px;cursor:pointer;margin:3px}#tripDocumentsRoot button:disabled{opacity:.45}#tripDocumentsRoot .docWarning{color:#ffd39b;font-size:12px;line-height:1.6}#tripDocumentsRoot .docStatus{color:#8fe0c1;font-size:12px}#tripDocumentsRoot .docErr{color:#ff9f9f;font-size:12px}#tripDocumentsRoot .docMuted{color:#aab6bf;font-size:12px}@media(max-width:600px){#tripDocumentsRoot .docGrid{grid-template-columns:1fr}}
+</style>
+<script type="module">
+/* V21.25 DOCUMENTS: encrypted file chunks stored in existing member-only Firestore /shared collection.
+   No Firebase Storage or paid plan required. 10 MiB file limit; ciphertext only. */
+import {getApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+import {getAuth,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc,deleteDoc,onSnapshot,runTransaction} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+const app=getApp(),auth=getAuth(app),db=getFirestore(app);
+const indexRef=doc(db,'shared','travelDocumentsIndex');
+const chunkRef=(id,i)=>doc(db,'shared',`travelDocChunk_${id}_${i}`);
+let entries=[],unsub=null;
+// Unlock is held in JS memory only, never in localStorage/sessionStorage or Firestore.
+let documentUnlock='';
+let tripDocSecurityEpoch=0;
+function tripDocumentsLock(){
+  tripDocSecurityEpoch++;
+  documentUnlock='';
+  const preview=document.getElementById('docPreview');
+  if(preview){preview.replaceChildren();preview.style.display='none';}
+  document.querySelectorAll('[data-link-for]').forEach(x=>{x.replaceChildren();x.style.display='none'});
+  for(const id of ['docPass','docPassConfirm']){const field=document.getElementById(id);if(field)field.value='';}
+  if(window.tripDocPreviewUrl){URL.revokeObjectURL(window.tripDocPreviewUrl);window.tripDocPreviewUrl=null;}
+}
+window.tripDocumentsLock=tripDocumentsLock;
+window.addEventListener('pagehide',()=>{tripDocumentsLock();document.querySelectorAll('[data-link-for]').forEach(x=>{x.replaceChildren();x.style.display='none'});});
+const enc=new TextEncoder();
+const el=id=>document.getElementById(id),html=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const base64=a=>{let out='';for(let i=0;i<a.length;i+=16384)out+=String.fromCharCode(...a.subarray(i,i+16384));return btoa(out)};
+const from64=s=>{const raw=atob(s),out=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out};
+const validUrl=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return''}};
+async function derive(pass,salt){const material=await crypto.subtle.importKey('raw',enc.encode(pass),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function seal(file,pass){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const key=await derive(pass,salt);const plain=await file.arrayBuffer();const cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,plain);return {bytes:new Uint8Array(cipher),salt:base64(salt),iv:base64(iv)}}
+async function unseal(bytes,pass,item){const key=await derive(pass,from64(item.salt));return crypto.subtle.decrypt({name:'AES-GCM',iv:from64(item.iv)},key,bytes)}
+function status(msg,err=false){const x=el('docStatus');if(x){x.className=err?'docErr':'docStatus';x.textContent=msg}}
+function root(){return el('tripDocumentsRoot')}
+function render(){const r=root();if(!r)return;if(window.tripDocPreviewUrl){URL.revokeObjectURL(window.tripDocPreviewUrl);window.tripDocPreviewUrl=null;}
+r.innerHTML=`<div class="docWarning">🔐 Files are encrypted on your device before saving to the existing member-only Firestore database (Spark free plan). Kousuke and ArU can open them with the same separate document passphrase. The passphrase is never uploaded. File names and categories are not encrypted. New website URLs are encrypted before saving. Never use your Firebase login password. If the passphrase is lost, encrypted files cannot be recovered. Keep printed/offline backups for immigration.</div>
+<div><label>Shared document passphrase / 書類専用の共通パスフレーズ</label><input id="docPass" type="password" autocomplete="off" placeholder="Enter shared document passphrase"><div class="docMuted">Use a long, unique passphrase and share it privately with ArU. For security, reloads and reopening the site require unlocking again. Switching apps without reloading normally keeps the document unlocked.</div></div>
+<div><label>Confirm passphrase for new documents / 登録時の確認入力</label><input id="docPassConfirm" type="password" autocomplete="off" placeholder="Re-enter the shared passphrase"><div class="docMuted">Required when adding a document with a newly entered passphrase. Existing documents are checked before saving to prevent mismatched passwords.</div></div>
+<div class="docGrid"><div><label>Document name</label><input id="docName" placeholder="Cambodia e-Visa / eTravel"></div><div><label>Traveler</label><select id="docOwner"><option>Kousuke</option><option>ArU</option><option>Both</option></select></div><div><label>Category</label><select id="docCategory"><option>Entry & Visa</option><option>Flights</option><option>Bus</option><option>Hotels</option><option>Other</option></select></div><div><label>Country</label><select id="docCountry"><option>Philippines</option><option>Cambodia</option><option>Thailand</option><option>Vietnam</option><option>Hong Kong</option><option>Other</option></select></div></div>
+<div><label>File (PDF or image, maximum 10 MB)</label><input id="docFile" type="file" accept="application/pdf,image/png,image/jpeg,image/webp"></div><div><label>Or website URL (no file required)</label><input id="docUrl" type="url" placeholder="https://..."></div><div><button id="docAdd">＋ Add document</button><span id="docStatus" role="status"></span></div><div><label>Search saved documents</label><input id="docSearch" placeholder="Search by name, country or traveler"></div><div id="docList"></div><div id="docPreview" style="display:none"></div>`;
+el('docAdd').onclick=add;el('docSearch').oninput=list;list();}
+function list(){const t=el('docList');if(!t)return;const q=(el('docSearch')?.value||'').toLowerCase();const filtered=entries.filter(d=>[d.name,d.owner,d.country,d.category].join(' ').toLowerCase().includes(q));t.innerHTML=filtered.length?filtered.map(d=>`<div class="docRow"><b>📄 ${html(d.name)}</b><div class="docMuted">${html(d.owner)} · ${html(d.country)} · ${html(d.category)} · ${d.kind==='file'?'Encrypted file':(d.urlCipher?'Encrypted website link':'Legacy URL — re-register')}</div><button data-open="${html(d.id)}">Open</button><button data-remove="${html(d.id)}">Delete</button><div class="docInlineLink" data-link-for="${html(d.id)}" style="display:none;margin-top:10px;width:100%"></div></div>`).join(''):'<div class="docMuted">No documents saved yet.</div>';t.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openDoc(b.dataset.open));t.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>removeDoc(b.dataset.remove));}
+// Store ciphertext in 400,000-character base64 chunks, safely under Firestore's 1 MiB document limit.
+const CHUNK=400000;
+async function writeIndex(update){await runTransaction(db,async tx=>{const snap=await tx.get(indexRef);const items=snap.exists()&&Array.isArray(snap.data().items)?snap.data().items:[];const next=update(items);if(next.length>200)throw Error('Document library limit reached (200 entries).');tx.set(indexRef,{items:next});})}
+// Verify the proposed passphrase against an existing encrypted item before allowing another upload.
+// This prevents accidentally creating files that require different passphrases.
+async function verifySharedPassphrase(pass){
+ const sample=entries.find(d=>d.kind==='url'&&d.urlCipher&&d.salt&&d.iv)||entries.find(d=>d.kind==='file'&&d.chunkCount>0&&d.salt&&d.iv);
+ if(!sample)return true;
+ try{
+   let encrypted;
+   if(sample.kind==='url')encrypted=from64(sample.urlCipher);
+   else{
+     let encoded='';
+     for(let i=0;i<sample.chunkCount;i++){
+       const snap=await getDoc(chunkRef(sample.id,i));
+       if(!snap.exists())return false;
+       encoded+=snap.data().data;
+     }
+     encrypted=from64(encoded);
+   }
+   await unseal(encrypted,pass,sample);
+   return true;
+ }catch{return false;}
+}
+async function add(){const u=auth.currentUser;if(!u)return status('Please sign in.',true);const name=el('docName').value.trim(),file=el('docFile').files?.[0],url=el('docUrl').value.trim(),pass=el('docPass').value||documentUnlock;if(!name)return status('Enter a document name.',true);if(!file&&!validUrl(url))return status('Choose a file or enter a valid URL.',true);if(file&&url)return status('Choose either a file or a URL.',true);if(file&&(!['application/pdf','image/png','image/jpeg','image/webp'].includes(file.type)||file.size>10*1024*1024))return status('Only PDF/JPEG/PNG/WebP up to 10 MB.',true);if(pass.length<16)return status('Use a shared passphrase of at least 16 characters for files and URLs.',true);if(el('docPass').value && el('docPass').value!==el('docPassConfirm').value)return status('Passphrases do not match. Re-enter both before saving.',true);if(!el('docPass').value&&!documentUnlock)return status('Enter and confirm the shared passphrase before saving.',true);const id=crypto.randomUUID(),data={id,name,owner:el('docOwner').value,category:el('docCategory').value,country:el('docCountry').value,kind:file?'file':'url',createdBy:u.uid,createdAt:Date.now()};el('docAdd').disabled=true;status('Saving…');let written=0;try{status('Checking shared passphrase against existing documents…');if(!(await verifySharedPassphrase(pass)))throw Error('Passphrase does not match existing encrypted documents. Nothing was saved.');if(file){const encrypted=await seal(file,pass);const encoded=base64(encrypted.bytes);const count=Math.ceil(encoded.length/CHUNK);Object.assign(data,{salt:encrypted.salt,iv:encrypted.iv,mime:file.type,chunkCount:count});for(let i=0;i<count;i++){status(`Uploading encrypted data ${i+1}/${count}…`);await setDoc(chunkRef(id,i),{data:encoded.slice(i*CHUNK,(i+1)*CHUNK)});written++}}else{const encrypted=await seal(new Blob([validUrl(url)],{type:'text/plain'}),pass);Object.assign(data,{urlCipher:base64(encrypted.bytes),salt:encrypted.salt,iv:encrypted.iv});}await writeIndex(items=>[data,...items]);documentUnlock=pass;status('Saved. Documents remain unlocked while this page stays loaded.');el('docName').value='';el('docFile').value='';el('docUrl').value='';el('docPass').value='';el('docPassConfirm').value='';}catch(e){for(let i=0;i<written;i++)await deleteDoc(chunkRef(id,i)).catch(()=>{});status(`Could not save: ${e.message}`,true)}finally{el('docAdd').disabled=false}}
+let documentOpenBusy=false;
+async function openDoc(id){if(documentOpenBusy){status('A document is already opening. Please wait…');return;}const d=entries.find(x=>x.id===id);if(!d)return;let pass=documentUnlock;if(!pass){pass=window.prompt('Enter the shared document passphrase / 書類専用パスフレーズを入力してください')||'';if(!pass)return;}const securityEpoch=tripDocSecurityEpoch;documentOpenBusy=true;status('Unlocking document… Please wait.');await new Promise(resolve=>setTimeout(resolve,0));try{if(d.kind==='url'){if(!d.urlCipher){status('This URL was saved without encryption in an older version. Delete it and register it again to protect it with a passphrase.',true);return;}try{const decoded=await unseal(from64(d.urlCipher),pass,d);if(securityEpoch!==tripDocSecurityEpoch)return;const u=validUrl(new TextDecoder().decode(decoded));if(!u)throw Error('Invalid decrypted URL');const slot=Array.from(document.querySelectorAll('[data-link-for]')).find(x=>x.dataset.linkFor===id);if(!slot)throw Error('Document row unavailable');document.querySelectorAll('[data-link-for]').forEach(x=>{if(x!==slot){x.style.display='none';x.replaceChildren()}});slot.replaceChildren();const link=document.createElement('a');link.href=u;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Open link ↗';link.style.cssText='display:inline-block;padding:10px 18px;background:#1673c9;color:#fff;border-radius:8px;text-decoration:none;font-weight:700';const close=document.createElement('button');close.textContent='Close';close.style.cssText='margin-left:10px';close.onclick=()=>{slot.style.display='none';slot.replaceChildren()};slot.append(link,close);slot.style.display='block';documentUnlock=pass;status('Link decrypted. Tap Open link to visit the website.');}catch(e){if(securityEpoch!==tripDocSecurityEpoch)return;documentUnlock='';console.error('Document URL unlock failed:',e);status('Unable to open URL: '+(e?.message||'Check the passphrase and try again.'),true);}return;}status('Downloading encrypted data…');try{if(!Number.isInteger(d.chunkCount)||d.chunkCount<1||d.chunkCount>50)throw Error('Invalid file metadata');let encoded='';for(let i=0;i<d.chunkCount;i++){status(`Reading encrypted data ${i+1}/${d.chunkCount}…`);const snap=await getDoc(chunkRef(id,i));if(securityEpoch!==tripDocSecurityEpoch)return;if(!snap.exists())throw Error('Missing file chunk');encoded+=snap.data().data}status('Decrypting on this device…');const plain=await unseal(from64(encoded),pass,d);if(securityEpoch!==tripDocSecurityEpoch)return;const blob=new Blob([plain],{type:d.mime||'application/pdf'});const url=URL.createObjectURL(blob);const preview=el('docPreview');if(!preview){URL.revokeObjectURL(url);throw Error('Preview area unavailable')}if(window.tripDocPreviewUrl)URL.revokeObjectURL(window.tripDocPreviewUrl);window.tripDocPreviewUrl=url;const isPdf=d.mime==='application/pdf';preview.style.display='block';preview.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>Preview: '+html(d.name)+'</b><div><button id="docSaveFile">Download</button><button id="docClosePreview">Close</button></div></div><div id="docPreviewBody" style="margin-top:10px"></div>';const body=el('docPreviewBody');if(isPdf){
+const frame=document.createElement('iframe');frame.src=url+'#view=Fit&zoom=page-fit&toolbar=0';frame.title='Document preview';frame.style.cssText='width:100%;height:65vh;min-height:360px;border:1px solid #35414c;border-radius:8px;background:white';body.append(frame);
+if(window.matchMedia('(max-width: 760px)').matches){
+const diagnostic=document.createElement('div');diagnostic.style.cssText='font-size:12px;color:#b9c4ce;margin:0 0 8px;';diagnostic.textContent='PDF viewer: Loading PDF.js…';body.insertBefore(diagnostic,frame);
+try{
+const pdfjs=await import('./pdf.min.mjs.js');if(securityEpoch!==tripDocSecurityEpoch)return;pdfjs.GlobalWorkerOptions.workerSrc='./pdf.worker.min.mjs.js';
+const pdf=await pdfjs.getDocument({data:new Uint8Array(plain)}).promise;if(securityEpoch!==tripDocSecurityEpoch)return;
+const pages=document.createElement('div');pages.style.cssText='display:grid;gap:12px;width:100%;min-width:0;';
+for(let n=1;n<=pdf.numPages;n++){
+const page=await pdf.getPage(n);if(securityEpoch!==tripDocSecurityEpoch)return;const v=page.getViewport({scale:1});
+const availableWidth=Math.max(1,body.getBoundingClientRect().width-4);
+const availableHeight=Math.max(1,window.innerHeight*0.65);
+const scale=Math.min(availableWidth/v.width,availableHeight/v.height);
+const dpr=Math.min(window.devicePixelRatio||1,2);
+const canvas=document.createElement('canvas');canvas.width=Math.ceil(v.width*scale*dpr);canvas.height=Math.ceil(v.height*scale*dpr);
+canvas.style.cssText='display:block;width:'+Math.floor(v.width*scale)+'px;max-width:100%;height:auto;margin:0 auto;background:white;border-radius:6px;';
+pages.append(canvas);await page.render({canvasContext:canvas.getContext('2d'),viewport:page.getViewport({scale:scale*dpr})}).promise;if(securityEpoch!==tripDocSecurityEpoch)return;
+}
+if(securityEpoch!==tripDocSecurityEpoch)return;frame.remove();body.append(pages);diagnostic.textContent='PDF viewer: PDF.js active · '+pdf.numPages+' page(s) · Fit entire page';
+}catch(err){if(securityEpoch!==tripDocSecurityEpoch)return;console.warn('Mobile PDF.js preview unavailable; using browser PDF viewer.',err);diagnostic.textContent='PDF viewer: Browser fallback (PDF.js failed: '+(err&&err.message?err.message:String(err))+')';}
+}
+}else{const img=document.createElement('img');img.src=url;img.alt=d.name;img.style.cssText='max-width:100%;max-height:75vh;object-fit:contain';body.append(img)}el('docSaveFile').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=d.name.replace(/[^\w\u3040-\u30ff\u3400-\u9fff .-]/g,'_')+(d.mime==='application/pdf'?'.pdf':d.mime==='image/png'?'.png':d.mime==='image/webp'?'.webp':'.jpg');document.body.append(a);a.click();a.remove()};el('docClosePreview').onclick=()=>{preview.style.display='none';preview.innerHTML='';URL.revokeObjectURL(url);window.tripDocPreviewUrl=null};preview.scrollIntoView({behavior:'smooth',block:'nearest'});documentUnlock=pass;status('Decrypted file opened in the preview below.');}catch(e){if(securityEpoch!==tripDocSecurityEpoch)return;documentUnlock='';console.error('Document open failed:',e);status('Unable to open: '+(e?.message||'Check the passphrase and connection, then try again.'),true)}}finally{documentOpenBusy=false;}
+}
+async function removeDoc(id){const d=entries.find(x=>x.id===id);if(!d||!confirm(`Delete ${d.name}?`))return;try{await writeIndex(items=>items.filter(x=>x.id!==id));if(d.kind==='file')for(let i=0;i<d.chunkCount;i++)await deleteDoc(chunkRef(id,i));status('Deleted.')}catch(e){status(`Delete failed: ${e.message}`,true)}}
+let tripDocPreviousAuthUid=null;
+onAuthStateChanged(auth,u=>{const nextUid=u?.uid||null;if(nextUid!==tripDocPreviousAuthUid){tripDocumentsLock();tripDocPreviousAuthUid=nextUid;}if(unsub){unsub();unsub=null}entries=[];if(!u){if(root())render();return}unsub=onSnapshot(indexRef,s=>{entries=s.exists()&&Array.isArray(s.data().items)?s.data().items.slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)):[];list()},e=>status('Document list access denied: '+e.message,true));});
+window.tripDocumentsRender=render;
+if(document.getElementById('tripDocumentsRoot'))render();
+</script></body></html>
