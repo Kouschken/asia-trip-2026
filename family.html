@@ -562,7 +562,7 @@ function renderGuide(view){
 </style></style><style id="familyReadOnlyStyles">
 /* Family-only view: hide data editors, mutation forms, and write controls. */
 button[data-transport-edit]{display:none!important}
-.editor,.editorBtns,.tripForm,.tripFormActions,.tripRouteForm,.extraForm,.tripStampActions,
+.editor,.editorBtns,.tripForm:not(:has(#tripFxAmount)),.tripFormActions,.tripRouteForm,.extraForm,.tripStampActions,
 #summaryTransportStructured input,#summaryTransportStructured textarea,
 #panelView input[type="file"],#panelView textarea,
 button[onclick*="save"],button[onclick*="delete"],button[onclick*="remove"],
@@ -2056,7 +2056,7 @@ if(document.getElementById('tripDocumentsRoot'))render();
    const id=(el.id||'').toLowerCase();
    if(blocked.test(label)||/(?:^|[-_])(save|delete|remove|add|edit|upload)(?:$|[-_])/.test(id)){el.hidden=true;el.style.setProperty('display','none','important');el.disabled=true;}
   });
-  document.querySelectorAll('.editor,.tripForm,.tripFormActions,.extraForm').forEach(el=>el.style.setProperty('display','none','important'));
+  document.querySelectorAll('.editor,.tripForm:not(:has(#tripFxAmount)),.tripFormActions,.extraForm').forEach(el=>el.style.setProperty('display','none','important'));
   document.querySelectorAll('input[type="checkbox"]').forEach(el=>{if(!el.closest('.authOverlay')){el.disabled=true;el.style.pointerEvents='none'}});
  }
  let scheduled=false;new MutationObserver(()=>{if(!scheduled){scheduled=true;requestAnimationFrame(()=>{scheduled=false;sanitize()})}}).observe(document.documentElement,{childList:true,subtree:true});
