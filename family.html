@@ -1401,8 +1401,8 @@ function renderFoodPlus(){const jp=tripFoodLanguage==='ja',t=(en,ja)=>jp?ja:en;i
 
 function renderExtra(v){currentExtra=v;if(!personalReady||!extrasReady){extraPanel('Loading…','<div class="panelItem">Syncing your travel data…</div>');return}
 const P=personal,S=sharedExtras;let body='',title='',note='';if(['couplequiz','dailymood','postcards','timecapsule','currency','passport'].includes(v)){renderTravel(v);return}
-if(v==='expenses'){
- title='💰 TRAVEL EXPENSES';note='🔒 Your expenses only. Signed-in devices using your account stay in sync. Exchange rates are manual estimates, not live rates.';
+if(v==='expenses'){extraPanel('💰 TRAVEL EXPENSES','<div class="panelItem extraMuted">Expense records are stored in private user data and are not accessible to the Family account. Shared read-only expense data must be added separately.</div>');return;
+ title='💰 TRAVEL EXPENSES';note='Family account cannot access private expense records under the current Firestore rules. No expense data is shown here yet; this is not a zero-spending report.';
  const rates={JPY:1,THB:4.5,USD:150,KHR:0.037,VND:0.006};
  const tripItems=A(P.expenses),preItems=A(P.preTripExpenses);
  const yen=x=>Number(x.amount||0)*(rates[x.currency]||1);
@@ -1860,6 +1860,8 @@ $('loginBtn').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('log
   unsub=null;personalUnsub=null;personalReady=false;extrasReady=false;
   if(!u){personal={};sharedExtras={};$('authOverlay').classList.remove('hidden');return}
   $('authOverlay').classList.add('hidden');$('userEmail').textContent='Family · Read only';
+  // Family cannot access private /users documents; use empty read-only defaults so public tools do not remain stuck on Loading.
+  tripApplyPersonal({});
   // Show cached information immediately. Never upload cached data back to Firestore.
   const cachedShared=tripCacheRead('shared',u.uid),cachedPersonal=tripCacheRead('personal',u.uid);
   if(cachedShared){try{tripApplyShared(cachedShared);sync('Saved data · connecting…')}catch(e){console.error('Shared cache:',e)}}
