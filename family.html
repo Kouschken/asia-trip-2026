@@ -561,6 +561,7 @@ function renderGuide(view){
 }
 </style></style><style id="familyReadOnlyStyles">
 /* Family-only view: hide data editors, mutation forms, and write controls. */
+button[data-transport-edit]{display:none!important}
 .editor,.editorBtns,.tripForm,.tripFormActions,.tripRouteForm,.extraForm,.tripStampActions,
 #summaryTransportStructured input,#summaryTransportStructured textarea,
 #panelView input[type="file"],#panelView textarea,
@@ -1289,7 +1290,7 @@ function tripTransportCompact(t,editable=false){
 function tripFieldHtml(f,value){const [key,label,kind]=f;let v=esc(value??'');let control=kind==='select'?`<select id="tf-${key}">${tripTransportTypes.map(z=>`<option value="${esc(z)}" ${z===(value||'Flight')?'selected':''}>${esc(z)}</option>`).join('')}</select>`:kind==='textarea'?`<textarea id="tf-${key}">${v}</textarea>`:`<input id="tf-${key}" type="${kind||'text'}" value="${v}" ${key==='booking'?'autocomplete="off"':''}>`;return `<div class="tripField ${kind==='textarea'?'wide':''}" ${['originalDeparture','originalArrival'].includes(key)?'data-flight-original="1"':''}><label for="tf-${key}">${esc(label)}</label>${control}</div>`}
 function tripTransportEditor(t){return `<div class="panelItem"><b>${tripTransportEditing===null?'＋ Add transport':'✏️ Edit transport'}</b><div class="tripForm" style="margin-top:12px">${tripFieldDefs.map(f=>tripFieldHtml(f,t[f[0]])).join('')}${tripRailEditorHtml(t,'transport')}${tripBusEditorHtml(t,'transport')}</div><div class="tripFormActions"><button class="tripAction" id="tripTransportSaveJa">日本語だけ保存（英語は変更しない）</button><button class="tripAction" id="tripTransportSave">Save transport</button><button class="tripAction secondary" id="tripTransportCancel">Cancel</button>${tripTransportEditing!==null?'<button class="tripAction danger" id="tripTransportDelete">Delete details / entry</button>':''}</div><p class="tripMuted">Changes are shared with both travelers. Existing Summary transport lines remain intact.</p></div>`}
 function renderTransportPlus(){if(!extrasReady){$('panelView').innerHTML='<h2>✈ TRANSPORT</h2><div class="panelItem">Syncing…</div>';return}let all=tripTransportList(),items=all.filter(t=>tripTransportFilter==='All'||t.type===tripTransportFilter);let editing=tripTransportEditing!==null?all.find(t=>t._key===tripTransportEditing.key&&t._legacy===tripTransportEditing.legacy):null;let base=editing||{type:'Flight',date:'2026-11-21'};
-let filters=['All',...tripTransportTypes];let journeyCards=items.map(t=>tripTransportCompact(t,true));
+let filters=['All',...tripTransportTypes];let journeyCards=items.map(t=>tripTransportCompact(t,false));
 // V18.3: date accordion wraps each journey accordion; no data model changes.
 const dateKeys=Array.from({length:9},(_,i)=>`2026-11-${String(i+20).padStart(2,'0')}`);
 const outsideDates=[...new Set(items.map(t=>t.date||'Unscheduled').filter(d=>!dateKeys.includes(d)))].sort();
