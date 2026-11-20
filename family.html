@@ -2062,4 +2062,16 @@ if(document.getElementById('tripDocumentsRoot'))render();
  let scheduled=false;new MutationObserver(()=>{if(!scheduled){scheduled=true;requestAnimationFrame(()=>{scheduled=false;sanitize()})}}).observe(document.documentElement,{childList:true,subtree:true});
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sanitize);else sanitize();
 })();
-</script></body></html>
+</script><script id="familyExpensesRemovalGuard">
+(function(){
+  const forbidden = el => el.matches('[data-view="expenses"],[data-mobile-view="expenses"],[data-extra-view="expenses"]') || (el.matches('button,a') && /^\s*(?:💰\s*)?(?:travel\s+)?expenses\s*$/i.test(el.textContent||''));
+  function removeExpenses(){
+    document.querySelectorAll('button,a').forEach(el=>{if(forbidden(el))el.remove();});
+    if(location.hash.toLowerCase()==='#expenses')location.replace(location.pathname+location.search+'#home');
+  }
+  let queued=false;
+  new MutationObserver(()=>{if(!queued){queued=true;requestAnimationFrame(()=>{queued=false;removeExpenses()})}}).observe(document.documentElement,{subtree:true,childList:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',removeExpenses);else removeExpenses();
+})();
+</script>
+</body></html>
